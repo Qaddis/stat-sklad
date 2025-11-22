@@ -32,5 +32,9 @@ class IngredientModel(Base):
         back_populates="product", cascade="all, delete-orphan"
     )
 
+    product: Mapped["ProductModel"] = relationship(
+        back_populates="ingredient", cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
         return f"<Ingredient id={self.id} name={self.name}>"
