@@ -7,7 +7,7 @@ from alembic import context
 
 from src.db import Base
 
-from config import settings
+from src.config import settings
 
 config = context.config
 
