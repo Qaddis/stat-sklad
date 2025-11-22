@@ -15,5 +15,8 @@ uuid = Annotated[
 ]
 
 createdAt = Annotated[
-    datetime, mapped_column(DateTime, server_default=text("TIMEZONE('utc', now())"))
+    datetime,
+    mapped_column(
+        DateTime, server_default=text("TIMEZONE('utc', now())"), nullable=False
+    ),
 ]

@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+from typing import List
 from enum import Enum as PyEnum
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -23,6 +26,10 @@ class IngredientModel(Base):
         PgEnum(UnitsEnum, name="units_enum", create_type=False),
         nullable=False,
         default=UnitsEnum.PIECES,
+    )
+
+    supply_items: Mapped[List["SupplyItemModel"]] = relationship(
+        back_populates="product", cascade="all, delete-orphan"
     )
 
     def __repr__(self):
