@@ -9,16 +9,6 @@ from src.db import Base
 
 from src.config import settings
 
-from src.models import (
-    UnitsEnum,
-    IngredientModel,
-    SupplyItemModel,
-    SupplyModel,
-    ProductModel,
-    MealModel,
-    RolesEnum,
-    UserModel,
-)  # noqa
 
 config = context.config
 

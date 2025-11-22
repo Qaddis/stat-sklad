@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.config import settings
 
+from src.routers import products_router
+
+
 app = FastAPI(
     title="StatSklad",
     description="Coursework for 1st year students of PetrSU Physical-Technical Institute",
@@ -20,6 +23,8 @@ app.middleware(
         allow_headers=["*"],
     )
 )
+
+app.include_router(products_router)
 
 
 @app.get("/")
