@@ -15,6 +15,9 @@ from src.models import (
     SupplyItemModel,
     SupplyModel,
     ProductModel,
+    MealModel,
+    RolesEnum,
+    UserModel,
 )  # noqa
 
 config = context.config
