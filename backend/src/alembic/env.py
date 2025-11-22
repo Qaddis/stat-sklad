@@ -9,6 +9,8 @@ from src.db import Base
 
 from src.config import settings
 
+from src.models import UnitsEnum, IngredientModel  # noqa
+
 config = context.config
 
 if config.config_file_name is not None:
