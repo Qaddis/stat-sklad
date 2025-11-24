@@ -1,0 +1,35 @@
+.action-link {
+	width: max(50%, 350px);
+	height: auto;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	padding: 20px;
+	border: 2px solid var(--text-color);
+	border-radius: 10px;
+	color: var(--text-color);
+
+	transition-property: border-color, color, opacity, translate;
+	transition-duration: 0.2s, 0.2s, 0.15s, 0.15s;
+
+	h4 {
+		font-size: 1.35rem;
+		font-weight: 600;
+	}
+
+	svg {
+		font-size: 40px;
+	}
+
+	&:hover {
+		border-color: var(--secondary-color);
+		color: var(--secondary-color);
+	}
+
+	&:active {
+		translate: 0 3px;
+		opacity: 0.65;
+	}
+}
