@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Martian_Mono, Roboto } from "next/font/google"
 
+import AppFooter from "@/components/layout/AppFooter"
 import AppHeader from "@/components/layout/AppHeader"
 
 import "@/assets/styles/globals.scss"
@@ -45,6 +46,8 @@ export default function RootLayout({
 				<main className="main">
 					<div className="wrapper">{children}</div>
 				</main>
+
+				<AppFooter />
 			</body>
 		</html>
 	)
