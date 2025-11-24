@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { Martian_Mono, Roboto } from "next/font/google"
 
+import AppHeader from "@/components/layout/AppHeader"
+
 import "@/assets/styles/globals.scss"
 
 const martianMono = Martian_Mono({
@@ -38,7 +40,11 @@ export default function RootLayout({
 	return (
 		<html lang="ru">
 			<body className={`${martianMono.variable} ${roboto.variable}`}>
-				{children}
+				<AppHeader />
+
+				<main className="main">
+					<div className="wrapper">{children}</div>
+				</main>
 			</body>
 		</html>
 	)
