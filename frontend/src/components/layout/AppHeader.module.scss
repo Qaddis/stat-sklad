@@ -36,11 +36,16 @@
 	}
 
 	span {
-		color: var(--accent-color);
 		font-family: var(--martian-font);
 		font-size: 1.65rem;
 		font-weight: 800;
-		text-shadow: -2px -1px 0 var(--main-dark-color);
+		background: linear-gradient(
+			45deg,
+			var(--primary-color),
+			var(--secondary-color)
+		);
+		background-clip: text;
+		color: transparent;
 	}
 }
 
