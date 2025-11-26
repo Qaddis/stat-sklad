@@ -39,8 +39,38 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang="ru">
+		<html lang="ru" suppressHydrationWarning>
 			<body className={`${martianMono.variable} ${roboto.variable}`}>
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `
+									(function () {
+										try {
+											const savedTheme = localStorage.getItem("darkMode")
+											const isDarkMode = JSON.parse(savedTheme)
+
+											const root = document.documentElement
+
+											root.style.setProperty(
+												"--main-color",
+												isDarkMode ? "var(--main-dark-color)" : "var(--main-light-color)"
+											)
+											root.style.setProperty(
+												"--add-color",
+												isDarkMode ? "var(--add-dark-color)" : "var(--add-light-color)"
+											)
+											root.style.setProperty(
+												"--text-color",
+												isDarkMode ? "var(--main-light-color)" : "var(--main-dark-color)"
+											)
+										} catch (e) {
+											console.error("Ошибка загрузки темы:", e)
+										}
+									})()
+									`
+					}}
+				/>
+
 				<AppHeader />
 
 				<main className="main">

@@ -31,7 +31,16 @@
 		}
 	}
 
-	&__label {
+	&__label:has(.help) {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 3.5px;
+
+		.help {
+			width: 1.35rem;
+			color: var(--primary-color);
+		}
 	}
 }
 

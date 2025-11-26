@@ -1,3 +1,7 @@
+"use client"
+
+import HelpIcon from "@mui/icons-material/HelpOutline"
+
 import PageHeader from "@/components/ui/PageHeader"
 import { user } from "@/data/user.data"
 
@@ -61,7 +65,13 @@ export default function UserPage() {
 							className={styles["user-info__label"]}
 							htmlFor="password-field"
 						>
-							Новый пароль:
+							Новый пароль:{" "}
+							<span
+								className={styles.help}
+								title='Введите новый пароль и нажмите "Сохранить изменения", чтобы изменить пароль'
+							>
+								<HelpIcon />
+							</span>
 						</label>
 
 						<input
