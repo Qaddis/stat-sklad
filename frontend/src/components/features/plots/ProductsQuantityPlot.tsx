@@ -5,10 +5,14 @@ import dynamic from "next/dynamic"
 import type { Data } from "plotly.js"
 import { useEffect, useRef, useState } from "react"
 
+import Spinner from "@/components/ui/Spinner"
 import { themeAtom } from "@/stores/theme.store"
 import { plotsColors } from "@/utils/theme.utils"
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false })
+const Plot = dynamic(() => import("react-plotly.js"), {
+	ssr: false,
+	loading: () => <Spinner text="Загрузка графика..." />
+})
 
 interface IProps {
 	dataInKgs: number[]

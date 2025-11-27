@@ -4,9 +4,13 @@ import { useAtom } from "jotai"
 import dynamic from "next/dynamic"
 import { useEffect, useRef, useState } from "react"
 
+import Spinner from "@/components/ui/Spinner"
 import { themeAtom } from "@/stores/theme.store"
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false })
+const Plot = dynamic(() => import("react-plotly.js"), {
+	ssr: false,
+	loading: () => <Spinner text="Загрузка графика..." />
+})
 
 interface IProps {
 	data: number[]
