@@ -2,7 +2,7 @@
 
 import HelpIcon from "@mui/icons-material/HelpOutline"
 
-import PageHeader from "@/components/ui/PageHeader"
+import PageHeading from "@/components/ui/PageHeading"
 import { user } from "@/data/user.data"
 
 import styles from "./UserPage.module.scss"
@@ -10,7 +10,7 @@ import styles from "./UserPage.module.scss"
 export default function UserPage() {
 	return (
 		<div className={styles.page}>
-			<PageHeader>Профиль</PageHeader>
+			<PageHeading>Профиль</PageHeading>
 
 			<section className={styles.content}>
 				<form className={styles["user-info"]}>

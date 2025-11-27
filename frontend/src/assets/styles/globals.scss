@@ -14,6 +14,8 @@ body {
 
 	background-color: var(--main-color);
 	color: var(--text-color);
+
+	transition: background-color 0.15s;
 }
 
 .main {

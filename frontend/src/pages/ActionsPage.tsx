@@ -7,7 +7,7 @@ import {
 } from "@mui/icons-material"
 
 import ActionLink from "@/components/features/ActionLink"
-import PageHeader from "@/components/ui/PageHeader"
+import PageHeading from "@/components/ui/PageHeading"
 import { NavigationEnum } from "@/constants/navigation.constants"
 
 import styles from "./ActionsPage.module.scss"
@@ -15,7 +15,7 @@ import styles from "./ActionsPage.module.scss"
 export default function ActionsPage() {
 	return (
 		<div className={styles.page}>
-			<PageHeader>Действия</PageHeader>
+			<PageHeading>Действия</PageHeading>
 
 			<nav className={styles["actions-links"]}>
 				<ActionLink

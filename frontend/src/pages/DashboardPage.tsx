@@ -2,7 +2,7 @@
 
 import { ArrowBackIosNew, ArrowForwardIos, Search } from "@mui/icons-material"
 
-import PageHeader from "@/components/ui/PageHeader"
+import PageHeading from "@/components/ui/PageHeading"
 import { UnitsEnum } from "@/types/products.types"
 import { formatDate } from "@/utils/datetime.utils"
 
@@ -14,7 +14,7 @@ import { products } from "@/data/products.data"
 export default function DashboardPage() {
 	return (
 		<div className={styles.page}>
-			<PageHeader>Дашбоард</PageHeader>
+			<PageHeading>Дашбоард</PageHeading>
 
 			<aside className={styles["search-block"]}>
 				<div className={styles["search-block__search-sect"]}>

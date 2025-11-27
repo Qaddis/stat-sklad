@@ -5,6 +5,10 @@
 	border-bottom: 2.5px solid var(--add-color);
 	background-color: var(--main-color);
 
+	transition:
+		background-color 0.15s,
+		border-color 0.15s;
+
 	position: sticky;
 	left: 0;
 	top: 0;
