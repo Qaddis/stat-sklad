@@ -9,7 +9,7 @@ import { formatDate } from "@/utils/datetime.utils"
 import styles from "./DashboardPage.module.scss"
 
 // FIXME:
-import { products } from "@/data/products.data"
+import { products } from "@/data"
 
 export default function DashboardPage() {
 	return (
@@ -79,7 +79,7 @@ export default function DashboardPage() {
 								</td>
 								<td className={styles["products-table__data-col"]}>
 									{product.quantity}{" "}
-									{product.units === UnitsEnum.KILOGRAMS ? "кг." : "ед."}
+									{product.units === UnitsEnum.KILOGRAMS ? "кг." : "шт."}
 								</td>
 								<td className={styles["products-table__data-col"]}>
 									{formatDate(product.lastSupply)}

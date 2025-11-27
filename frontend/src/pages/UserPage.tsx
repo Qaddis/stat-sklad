@@ -3,9 +3,11 @@
 import HelpIcon from "@mui/icons-material/HelpOutline"
 
 import PageHeading from "@/components/ui/PageHeading"
-import { user } from "@/data/user.data"
 
 import styles from "./UserPage.module.scss"
+
+// FIXME:
+import { user } from "@/data"
 
 export default function UserPage() {
 	return (
