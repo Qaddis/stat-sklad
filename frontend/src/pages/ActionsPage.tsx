@@ -29,7 +29,7 @@ export default function ActionsPage() {
 					icon={RemoveCircleOutline}
 				/>
 				<ActionLink
-					to={NavigationEnum.ACTIONS.HISTORY}
+					to={NavigationEnum.ACTIONS.HISTORY.ALL}
 					title="История операций"
 					icon={History}
 				/>

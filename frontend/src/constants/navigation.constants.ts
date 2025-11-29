@@ -5,7 +5,10 @@ export const NavigationEnum = {
 		ALL: "/actions",
 		WRITE_OFF: "/actions/write-off",
 		NEW_SUPPLY: "/actions/new-supply",
-		HISTORY: "/actions/history"
+		HISTORY: {
+			ALL: "/actions/history",
+			ACTION: "/actions/history/" // + action_id
+		}
 	},
 	USER: "/user",
 	LOGIN: {
