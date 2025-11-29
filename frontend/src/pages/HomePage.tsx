@@ -2,9 +2,11 @@
 
 import Link from "next/link"
 
+import NotificationCard from "@/components/features/NotificationCard"
 import ProductsQuantityPlot from "@/components/features/plots/ProductsQuantityPlot"
 import SuppliesCountPlot from "@/components/features/plots/SuppliesCountPlot"
 import PageHeading from "@/components/ui/PageHeading"
+import { NavigationEnum } from "@/constants/navigation.constants"
 import { ActionTypeEnum } from "@/types/actions.types"
 import { UnitsEnum } from "@/types/products.types"
 import { formatDate } from "@/utils/datetime.utils"
@@ -12,8 +14,7 @@ import { formatDate } from "@/utils/datetime.utils"
 import styles from "./HomePage.module.scss"
 
 // FIXME:
-import { NavigationEnum } from "@/constants/navigation.constants"
-import { actions, products, suppliesCount } from "@/data"
+import { actions, notifications, products, suppliesCount } from "@/data"
 
 export default function HomePage() {
 	const productsInKgs = products.filter(p => p.units === UnitsEnum.KILOGRAMS)
@@ -32,7 +33,17 @@ export default function HomePage() {
 		<div className={styles.page}>
 			<PageHeading>Главная</PageHeading>
 
-			<div className={styles["last-actions"]}>
+			<div className={styles["notifications-sect"]}>
+				<h3 className={styles["sect-heading"]}>Уведомления</h3>
+
+				<div className={styles.notifications}>
+					{notifications.map(n => (
+						<NotificationCard key={n.id} {...n} date={n.created_at} />
+					))}
+				</div>
+			</div>
+
+			<div className={styles["last-actions-sect"]}>
 				<h3 className={styles["sect-heading"]}>Последние действия</h3>
 
 				<table className={styles["actions-table"]}>
@@ -57,9 +68,7 @@ export default function HomePage() {
 									key={action.id}
 									className={styles["actions-table__data-row"]}
 								>
-									<td
-										className={`${styles["actions-table__data-col"]} ${action.type.toLowerCase()}`}
-									>
+									<td className={styles["actions-table__data-col"]}>
 										{getTypeHeading(action.type)}
 									</td>
 									<td className={styles["actions-table__data-col"]}>
