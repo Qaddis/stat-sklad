@@ -1,0 +1,106 @@
+.content {
+	width: 100%;
+}
+
+.search-block {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 25px;
+
+	border: 3px solid var(--add-color);
+	border-radius: 5px;
+	margin-bottom: 20px;
+	padding: 10px;
+
+	&__search-sect {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		flex-grow: 1;
+	}
+
+	&__search-inp {
+		padding: 3.5px;
+		border-bottom: 2px solid var(--text-color);
+		flex-grow: 1;
+		transition: border-color 0.2s;
+
+		&:focus {
+			border-color: var(--secondary-color);
+		}
+
+		option:hover {
+			background-color: var(--secondary-color);
+		}
+	}
+
+	&__search-btn,
+	&__page-num-btn {
+		width: 35px;
+		height: 35px;
+		border: 1px solid var(--text-color);
+		border-radius: 5px;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		transition-property: background-color, color, border-color;
+		transition-duration: 0.25s, 0.25s, 0.25s;
+
+		&:hover {
+			border-color: var(--primary-color);
+			background-color: var(--primary-color);
+			color: var(--main-color);
+		}
+
+		&:active {
+			background-color: var(--secondary-color);
+			border-color: var(--secondary-color);
+		}
+	}
+
+	&__pagination-size-select {
+		height: 35px;
+		padding: 0 10px;
+		border: 1px solid var(--text-color);
+		border-radius: 5px;
+		outline: none !important;
+
+		&:focus {
+			border-color: var(--secondary-color);
+		}
+	}
+
+	&__pagination-page-num {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	&__page-num {
+		font-size: 1.15rem;
+
+		span {
+			opacity: 0.65;
+		}
+	}
+}
+
+.products-table {
+	width: 100%;
+	border-collapse: collapse;
+	border: 2px solid var(--add-color);
+
+	&__heading {
+		font-size: 1.1rem;
+		border: 1px solid var(--add-color);
+		padding: 5px;
+	}
+
+	&__data-col {
+		border: 1px solid var(--add-color);
+		padding: 5px;
+	}
+}

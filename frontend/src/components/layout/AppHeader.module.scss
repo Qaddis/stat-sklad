@@ -5,6 +5,10 @@
 	border-bottom: 2.5px solid var(--add-color);
 	background-color: var(--main-color);
 
+	transition:
+		background-color 0.15s,
+		border-color 0.15s;
+
 	position: sticky;
 	left: 0;
 	top: 0;
@@ -53,4 +57,9 @@
 	display: flex;
 	align-items: center;
 	gap: 0 15px;
+}
+
+.buttons {
+	display: flex;
+	gap: 35px;
 }

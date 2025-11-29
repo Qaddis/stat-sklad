@@ -3,7 +3,7 @@
 	--add-light-color: #c9c9c9;
 
 	--main-dark-color: #1c1c1c;
-	--add-dark-color: #262626;
+	--add-dark-color: #363636;
 
 	--primary-color: #1eb589;
 	--secondary-color: #11998e;
@@ -17,7 +17,7 @@
 		--roboto-font
 	*/
 
-	--page-header-fz: clamp(1.375rem, 6vw, 1.75rem);
-	--sect-header-fz: clamp(1.25rem, 5vw, 1.56rem);
-	--sect-subheader-fz: clamp(1.125rem, 4vw, 1.375rem);
+	--page-heading-fz: clamp(1.375rem, 6vw, 1.75rem);
+	--sect-heading-fz: clamp(1.25rem, 5vw, 1.56rem);
+	--sect-subheading-fz: clamp(1.125rem, 4vw, 1.375rem);
 }

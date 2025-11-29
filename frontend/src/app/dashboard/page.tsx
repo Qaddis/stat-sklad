@@ -1,3 +1,11 @@
+import type { Metadata } from "next"
+
+import DashboardPage from "@/pages/DashboardPage"
+
+export const metadata: Metadata = {
+	title: "Дашборд"
+}
+
 export default function Dashboard() {
-	return <h1>Страница &ldquo;Дашбоард&rdquo;</h1>
+	return <DashboardPage />
 }

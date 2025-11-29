@@ -1,0 +1,29 @@
+.notification-card {
+	display: flex;
+	gap: 0 20px;
+	align-items: center;
+
+	padding: 10px;
+	border: 2px solid var(--add-color);
+	border-radius: 5px;
+
+	svg {
+		font-size: 50px !important;
+	}
+}
+
+.heading {
+	font-size: 1.2rem;
+	font-weight: 600;
+	color: var(--text-color);
+}
+
+.date {
+	font-size: 0.85rem;
+	opacity: 0.85;
+	font-style: italic;
+}
+
+.description {
+	margin-top: 10px;
+}

@@ -1,3 +1,11 @@
+import type { Metadata } from "next"
+
+import HomePage from "@/pages/HomePage"
+
+export const metadata: Metadata = {
+	title: "Главная | СтатСклад"
+}
+
 export default function Home() {
-	return <h1>Страница &ldquo;Главная&rdquo;</h1>
+	return <HomePage />
 }

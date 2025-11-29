@@ -14,6 +14,8 @@ body {
 
 	background-color: var(--main-color);
 	color: var(--text-color);
+
+	transition: background-color 0.15s;
 }
 
 .main {
@@ -26,4 +28,51 @@ body {
 	max-width: 1140px;
 	height: auto;
 	margin: 0 auto;
+}
+
+// Страница 404
+.not-found-page {
+	height: calc(100vh - 132px);
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 25px;
+
+	h2 {
+		font-size: 2.5rem;
+
+		span {
+			color: var(--secondary-color);
+		}
+
+		i {
+			color: var(--primary-color);
+			font-weight: bold;
+		}
+	}
+
+	a {
+		display: block;
+		padding: 7.5px 15px;
+		border: 1px solid var(--primary-color);
+		border-radius: 5px;
+
+		font-size: 1.15rem;
+		color: var(--primary-color);
+
+		transition-property: background-color, color, opacity, translate;
+		transition-duration: 0.25s, 0.25s, 0.15s, 0.15s;
+
+		&:hover {
+			background-color: var(--primary-color);
+			color: var(--main-color);
+		}
+
+		&:active {
+			opacity: 0.85;
+			translate: 0 2px;
+		}
+	}
 }
