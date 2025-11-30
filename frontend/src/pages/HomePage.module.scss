@@ -24,15 +24,23 @@
 	border: 2px solid var(--add-color);
 	table-layout: auto;
 
+	transition:
+		border-color 0.15s,
+		color 0.15s;
+
 	&__heading {
 		font-size: 1.1rem;
 		border: 1px solid var(--add-color);
 		padding: 5px;
+
+		transition: border-color 0.15s;
 	}
 
 	&__data-col {
 		border: 1px solid var(--add-color);
 		padding: 5px;
+
+		transition: border-color 0.15s;
 
 		&:last-child {
 			padding: 0;
