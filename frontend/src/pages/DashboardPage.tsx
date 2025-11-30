@@ -33,10 +33,9 @@ export default function DashboardPage() {
 					defaultValue="25"
 					className={styles["search-block__pagination-size-select"]}
 				>
+					<option value="10">10</option>
 					<option value="25">25</option>
 					<option value="50">50</option>
-					<option value="75">75</option>
-					<option value="100">100</option>
 				</select>
 
 				<div className={styles["search-block__pagination-page-num"]}>

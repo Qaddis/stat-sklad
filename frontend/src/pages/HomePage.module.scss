@@ -42,6 +42,12 @@
 
 		transition: border-color 0.15s;
 
+		&:nth-child(2) {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
 		&:last-child {
 			padding: 0;
 
