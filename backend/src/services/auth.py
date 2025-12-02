@@ -1,0 +1,28 @@
+import jwt
+import bcrypt
+
+from ..models import users
+from ..config import settings
+
+def encode_jwt(
+    payload : dict,
+    private_key : str = settings.auth_jwt.private_key_path.read_text(),
+    algorithm : str = settings.auth_jwt.algorihm 
+):
+    encoded = jwt.encode(payload, private_key, algorithm=algorithm)
+    return encoded
+
+def decode_jwt(
+    payload : str | bytes,
+    public_key : str = settings.auth_jwt.public_key_path.read_text(),
+    algorithm : str = settings.auth_jwt.algorihm 
+):
+    decoded = jwt.encode(token, public_key_key, algorithm=algorithm)
+    return decoded
+
+def get_hash_password(password: str) -> str:
+    bytes = password.encode('utf-8')
+    return str(bcrypt.hashpw(bytes, bcrypt.gensalt()))
+
+def verify_password(plain_password: str, hashed_password: users.UserModel.password):
+    return bcrypt.checkpw(plain_password, hashed_password)
