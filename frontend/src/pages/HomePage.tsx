@@ -47,6 +47,13 @@ export default function HomePage() {
 				<h3 className={styles["sect-heading"]}>Последние действия</h3>
 
 				<table className={styles["actions-table"]}>
+					<colgroup>
+						<col style={{ width: "15%" }} />
+						<col style={{ width: "50%" }} />
+						<col style={{ width: "20%" }} />
+						<col style={{ width: "15%" }} />
+					</colgroup>
+
 					<thead>
 						<tr className={styles["actions-table__headings"]}>
 							<th className={styles["actions-table__heading"]}>Операция</th>
@@ -71,13 +78,14 @@ export default function HomePage() {
 									<td className={styles["actions-table__data-col"]}>
 										{getTypeHeading(action.type)}
 									</td>
-									<td className={styles["actions-table__data-col"]}>
-										{action.products.map((product, idx) =>
-											idx + 1 === action.products.length
-												? product.name
-												: `${product.name}, `
-										)}
-									</td>
+									<td
+										className={styles["actions-table__data-col"]}
+										dangerouslySetInnerHTML={{
+											__html: action.products.map(
+												product => `<i>${product.name}</i>`
+											)
+										}}
+									></td>
 									<td className={styles["actions-table__data-col"]}>
 										{formatDate(action.created_at)}
 									</td>
