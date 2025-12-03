@@ -3,8 +3,8 @@
 import { ArrowBackIosNew, ArrowForwardIos, Search } from "@mui/icons-material"
 
 import PageHeading from "@/components/ui/PageHeading"
-import { UnitsEnum } from "@/types/products.types"
 import { formatDate } from "@/utils/datetime.utils"
+import { getProductUnitsLabel } from "@/utils/labels.utils"
 
 import styles from "./DashboardPage.module.scss"
 
@@ -77,8 +77,7 @@ export default function DashboardPage() {
 									{product.name}
 								</td>
 								<td className={styles["products-table__data-col"]}>
-									{product.quantity}{" "}
-									{product.units === UnitsEnum.KILOGRAMS ? "кг." : "шт."}
+									{product.quantity} {getProductUnitsLabel(product.units)}
 								</td>
 								<td className={styles["products-table__data-col"]}>
 									{formatDate(product.lastSupply)}

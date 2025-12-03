@@ -5,8 +5,8 @@ import Link from "next/link"
 
 import PageHeading from "@/components/ui/PageHeading"
 import { NavigationEnum } from "@/constants/navigation.constants"
-import { ActionTypeEnum } from "@/types/actions.types"
 import { formatDate } from "@/utils/datetime.utils"
+import { getActionTypeLabel } from "@/utils/labels.utils"
 
 import styles from "./ActionsHistoryPage.module.scss"
 
@@ -14,15 +14,6 @@ import styles from "./ActionsHistoryPage.module.scss"
 import { actions } from "@/data"
 
 export default function ActionsHistoryPage() {
-	const getTypeHeading = (type: keyof typeof ActionTypeEnum): string =>
-		type === ActionTypeEnum.SUPPLY
-			? "Поставка"
-			: type === ActionTypeEnum.WRITE_OFF
-				? "Списание"
-				: type === ActionTypeEnum.TAKEN
-					? "Использование"
-					: "ОШИБКА"
-
 	return (
 		<div className={styles.page}>
 			<PageHeading>История операций</PageHeading>
@@ -103,7 +94,7 @@ export default function ActionsHistoryPage() {
 									className={styles["actions-table__data-row"]}
 								>
 									<td className={styles["actions-table__data-col"]}>
-										{getTypeHeading(action.type)}
+										{getActionTypeLabel(action.type)}
 									</td>
 									<td
 										className={styles["actions-table__data-col"]}

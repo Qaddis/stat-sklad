@@ -7,9 +7,9 @@ import ProductsQuantityPlot from "@/components/features/plots/ProductsQuantityPl
 import SuppliesCountPlot from "@/components/features/plots/SuppliesCountPlot"
 import PageHeading from "@/components/ui/PageHeading"
 import { NavigationEnum } from "@/constants/navigation.constants"
-import { ActionTypeEnum } from "@/types/actions.types"
 import { UnitsEnum } from "@/types/products.types"
 import { formatDate } from "@/utils/datetime.utils"
+import { getActionTypeLabel } from "@/utils/labels.utils"
 
 import styles from "./HomePage.module.scss"
 
@@ -19,16 +19,6 @@ import { actions, notifications, products, suppliesCount } from "@/data"
 export default function HomePage() {
 	const productsInKgs = products.filter(p => p.units === UnitsEnum.KILOGRAMS)
 	const productsInPieces = products.filter(p => p.units === UnitsEnum.PIECES)
-
-	const getTypeHeading = (type: keyof typeof ActionTypeEnum): string =>
-		type === ActionTypeEnum.SUPPLY
-			? "Поставка"
-			: type === ActionTypeEnum.WRITE_OFF
-				? "Списание"
-				: type === ActionTypeEnum.TAKEN
-					? "Использование"
-					: "ОШИБКА"
-
 	return (
 		<div className={styles.page}>
 			<PageHeading>Главная</PageHeading>
@@ -76,7 +66,7 @@ export default function HomePage() {
 									className={styles["actions-table__data-row"]}
 								>
 									<td className={styles["actions-table__data-col"]}>
-										{getTypeHeading(action.type)}
+										{getActionTypeLabel(action.type)}
 									</td>
 									<td
 										className={styles["actions-table__data-col"]}
