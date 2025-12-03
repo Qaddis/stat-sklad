@@ -9,7 +9,9 @@ BASE_DIR = Path(__file__).parent.parent
 class AuthJWT(BaseModel):
     private_key_path: Path = BASE_DIR / "src" / "certs" / "private.key"
     public_key_path: Path = BASE_DIR / "src" / "certs" / "public.key"
-    algorihm: str = "RSA256"
+    algorihm: str = "RS256"
+    access_token_expire_minutes: int = 15
+    refresh_token_expire_days: int = 30
 
 
 class Settings(BaseSettings):

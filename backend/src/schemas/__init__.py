@@ -1,1 +1,1 @@
-from .auth import RegisterUser
+from .auth import RegisterUser, TokenInfo

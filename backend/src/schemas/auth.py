@@ -11,3 +11,8 @@ class BaseUser(BaseModel):
     
 class RegisterUser(BaseUser):
     password: str
+    
+class TokenInfo(BaseModel):
+    access_token: str
+    refresh_token: str | None = None
+    token_type: str = "Bearer"
