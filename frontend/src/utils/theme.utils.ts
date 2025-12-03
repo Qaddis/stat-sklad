@@ -15,6 +15,11 @@ export const changeTheme = (doc: Document, isDarkMode: boolean): void => {
 		"--text-color",
 		isDarkMode ? "var(--main-light-color)" : "var(--main-dark-color)"
 	)
+
+	root.style.setProperty(
+		"--icon-calendar",
+		isDarkMode ? "var(--icon-calendar-light)" : "var(--icon-calendar-dark)"
+	)
 }
 
 export const plotsColors = [

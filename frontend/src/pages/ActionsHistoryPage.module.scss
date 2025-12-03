@@ -97,9 +97,8 @@
 		transition: border-color 0.2s;
 
 		&::-webkit-calendar-picker-indicator {
-			background-color: var(--text-color);
-			background-clip: content-box;
-			background-image: none;
+			background: var(--icon-calendar);
+			background-size: cover;
 			border-radius: 50%;
 			transition: background-color 0.15s;
 		}

@@ -63,6 +63,10 @@ export default function RootLayout({
 												"--text-color",
 												isDarkMode ? "var(--main-light-color)" : "var(--main-dark-color)"
 											)
+											root.style.setProperty(
+												"--icon-calendar",
+												isDarkMode ? "var(--icon-calendar-light)" : "var(--icon-calendar-dark)"
+											)
 										} catch (e) {
 											console.error("Ошибка загрузки темы:", e)
 										}
