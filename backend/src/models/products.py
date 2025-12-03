@@ -4,7 +4,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db import Base
-from src.models.defaults import uuid
+from src.models.defaults import uuid, createdAt
 from src.models import IngredientModel
 
 
@@ -18,5 +18,7 @@ class ProductModel(Base):
 
     quantity: Mapped[int]
 
+    created_at: Mapped[createdAt] # Добавляем дату создания для сортировки
+    
     def __repr__(self):
         return f"<Product id={self.ingredient_id} quantity={self.quantity}>"

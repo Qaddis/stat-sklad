@@ -8,7 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 
 from src.db import Base
-from src.models.defaults import uuid
+from src.models.defaults import uuid, createdAt
 
 
 ingredients_to_meals = Table(
@@ -52,6 +52,8 @@ class IngredientModel(Base):
     meals: Mapped[List["MealModel"]] = relationship(
         secondary=ingredients_to_meals, back_populates="ingredients", lazy="selectin"
     )
+
+    created_at: Mapped[createdAt] # Добавляем дату создания, как и вместе с products
 
     def __repr__(self):
         return f"<Ingredient id={self.id} name={self.name}>"
