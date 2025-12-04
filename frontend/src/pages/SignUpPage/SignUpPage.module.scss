@@ -1,0 +1,49 @@
+.form {
+	width: max(40%, 300px);
+	margin: 0 auto;
+
+	display: flex;
+	flex-direction: column;
+
+	label {
+		margin-bottom: 3px;
+	}
+
+	input[type="email"],
+	input[type="text"] {
+		margin-bottom: 15px;
+	}
+
+	div {
+		margin-bottom: 30px;
+
+		input {
+			margin: 0 !important;
+		}
+	}
+}
+
+.save-btn {
+	width: max(50%, 150px);
+	border: 1px solid var(--primary-color);
+	border-radius: 5px;
+	margin: 0 auto;
+	padding: 7.5px 15px;
+
+	font-size: 1.1rem;
+	color: var(--primary-color);
+
+	transition-property: background-color, color, border-color, translate;
+	transition-duration: 0.2s, 0.2s, 0.2s, 0.15s;
+
+	&:hover {
+		background-color: var(--primary-color);
+		color: var(--main-color);
+	}
+
+	&:active {
+		background-color: var(--secondary-color);
+		border-color: var(--secondary-color);
+		translate: 0 2px;
+	}
+}
