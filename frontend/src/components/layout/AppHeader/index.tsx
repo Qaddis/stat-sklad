@@ -5,8 +5,8 @@ import Link from "next/link"
 
 import Logo from "@/assets/Logo.png"
 import { NavigationEnum } from "@/constants/navigation.constants"
-import ThemeSwitchButton from "../features/ThemeSwitch"
-import NavLink from "../ui/NavLink"
+import ThemeSwitchButton from "../../features/ThemeSwitch"
+import NavLink from "../../ui/NavLink"
 
 import styles from "./AppHeader.module.scss"
 
