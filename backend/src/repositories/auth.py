@@ -17,6 +17,10 @@ class UserCRUD:
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
                 
+    async def get_user_by_id(self, id: str) -> Optional[UserModel]:
+        stmt = select(UserModel).where(UserModel.id == id)
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
     
     async def create_user(self, user_in: RegisterUser) -> Optional[UserModel]:
         stmt = insert(UserModel).values(
