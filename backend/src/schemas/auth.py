@@ -6,7 +6,6 @@ class BaseUser(BaseModel):
     email: EmailStr
     first_name: str
     second_name: str
-    role: users.RolesEnum
     
     
 class RegisterUser(BaseUser):
@@ -17,6 +16,7 @@ class AuthUser(BaseModel):
     password: str
     
 class TokenInfo(BaseModel):
+    user_id: str
     access_token: str
     refresh_token: str | None = None
     token_type: str = "Bearer"
