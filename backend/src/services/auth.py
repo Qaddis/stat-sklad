@@ -26,11 +26,11 @@ def encode_jwt(
     return encoded
 
 def decode_jwt(
-    payload : str | bytes,
+    token : str | bytes,
     public_key : str = settings.auth_jwt.public_key_path.read_text(),
-    algorithm : str = settings.auth_jwt.algorihm 
+    algorithm : str = settings.auth_jwt.algorihm,
 ):
-    decoded = jwt.encode(token, public_key, algorithm=algorithm)
+    decoded = jwt.decode(token, public_key, algorithms=[algorithm])
     return decoded
 
 def get_hash_password(password: str) -> bytes:
