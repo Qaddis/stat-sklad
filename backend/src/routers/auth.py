@@ -1,14 +1,14 @@
-from fastapi import APIRouter, Depends
-from typing import Annotated
+from fastapi import APIRouter, Depends, HTTPException, status
+from typing import Optional
 from fastapi.security import HTTPBasic
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import timedelta
 
-from ..schemas import RegisterUser, TokenInfo
+from ..schemas import RegisterUser, TokenInfo, AuthUser
 from ..repositories import UserCRUD
 from ..db import get_db
 from ..config import settings
-from src.services.auth import encode_jwt
+from src.services.auth import encode_jwt, verify_password, get_hash_password
 
 TOKEN_TYPE_FIELD = 'type'
 ACCESS_TYPE = 'access'
@@ -42,3 +42,35 @@ async def sign_up(user_in: RegisterUser, db : AsyncSession = Depends(get_db)):
         access_token=access_token,
         refresh_token=refresh_token
     )
+    
+    
+@router.post("/sign_in", response_model=Optional[TokenInfo])
+async def sign_in(auth_data: AuthUser, db: AsyncSession = Depends(get_db)):
+    crud = UserCRUD(db)
+    result = await crud.get_user_by_email(auth_data.email)
+
+    if result:
+        if verify_password(auth_data.password, result.password):
+            jwt_payload = {
+                "id": str(result.id),
+                TOKEN_TYPE_FIELD: REFRESH_TYPE
+            }
+            refresh_token = encode_jwt(
+                jwt_payload,
+                expire_timedelta=timedelta(days=settings.auth_jwt.refresh_token_expire_days))
+            
+            jwt_payload.update({
+                "id": str(result.id),
+                "email": result.email,
+                "role": str(result.role),
+                TOKEN_TYPE_FIELD: ACCESS_TYPE})
+            access_token = encode_jwt(jwt_payload)
+            
+            return TokenInfo(
+                access_token=access_token,
+                refresh_token=refresh_token
+            )
+        else:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="wrong password")
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found")

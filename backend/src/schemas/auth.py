@@ -12,6 +12,10 @@ class BaseUser(BaseModel):
 class RegisterUser(BaseUser):
     password: str
     
+class AuthUser(BaseModel):
+    email: EmailStr
+    password: str
+    
 class TokenInfo(BaseModel):
     access_token: str
     refresh_token: str | None = None
