@@ -12,7 +12,7 @@ class UserCRUD:
     def __init__(self, db: AsyncSession):
         self.db  = db
     
-    async def get_user_by_email(self, email: str) -> Optional[UserModel.email]:
+    async def get_user_by_email(self, email: str) -> Optional[UserModel]:
         stmt = select(UserModel).where(UserModel.email == email)
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
