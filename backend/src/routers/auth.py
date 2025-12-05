@@ -8,7 +8,7 @@ from ..schemas import RegisterUser, TokenInfo, AuthUser
 from ..repositories import UserCRUD
 from ..db import get_db
 from ..config import settings
-from src.services.auth import encode_jwt, verify_password, get_hash_password
+from src.services.auth import encode_jwt, decode_jwt, verify_password, get_hash_password
 
 TOKEN_TYPE_FIELD = 'type'
 ACCESS_TYPE = 'access'
@@ -27,7 +27,6 @@ async def sign_up(user_in: RegisterUser, db : AsyncSession = Depends(get_db)):
     jwt_payload = {
         "id": str(result.id),
         "email": result.email,
-        "role": str(result.role),
         TOKEN_TYPE_FIELD: ACCESS_TYPE
     }
     
@@ -39,6 +38,7 @@ async def sign_up(user_in: RegisterUser, db : AsyncSession = Depends(get_db)):
         expire_timedelta=timedelta(days=settings.auth_jwt.refresh_token_expire_days))
     
     return TokenInfo(
+        user_id=str(result.id),
         access_token=access_token,
         refresh_token=refresh_token
     )
@@ -62,11 +62,11 @@ async def sign_in(auth_data: AuthUser, db: AsyncSession = Depends(get_db)):
             jwt_payload.update({
                 "id": str(result.id),
                 "email": result.email,
-                "role": str(result.role),
                 TOKEN_TYPE_FIELD: ACCESS_TYPE})
             access_token = encode_jwt(jwt_payload)
             
             return TokenInfo(
+                user_id=str(result.id),
                 access_token=access_token,
                 refresh_token=refresh_token
             )
@@ -74,3 +74,34 @@ async def sign_in(auth_data: AuthUser, db: AsyncSession = Depends(get_db)):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="wrong password")
     else:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found")
+    
+    
+@router.post("/refresh", response_model=Optional[TokenInfo])
+async def refresh_token(refresh_token : str, db : AsyncSession = Depends(get_db)):
+    payload = decode_jwt(refresh_token)
+    
+    crud = UserCRUD(db)
+    result = await crud.get_user_by_id(payload['id'])
+    if result:
+        access_payload = {
+            "id": str(result.id),
+            "email": result.email,
+            TOKEN_TYPE_FIELD: ACCESS_TYPE
+        }
+        access_token = encode_jwt(access_payload)
+        
+        refresh_payload = {
+            "id": str(result.id),
+            TOKEN_TYPE_FIELD: REFRESH_TYPE
+        }
+        new_refresh_token = encode_jwt(refresh_payload,
+            expire_timedelta=timedelta(days=settings.auth_jwt.refresh_token_expire_days))
+        
+        return TokenInfo(
+            user_id=str(result.id),
+            access_token=access_token,
+            refresh_token=new_refresh_token
+        )
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found")
+    
