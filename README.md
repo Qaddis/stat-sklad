@@ -19,7 +19,6 @@
 
 - `/auth/sign-up` - **Регистрация**: принимает основные данные, если email не встречается в базе - возвращает access-token + refresh-token
 - `/auth/sign-in` - **Вход в аккаунт**: если email и пароль (хэш) правильные, то возвращаем access-token + refresh-token
-- `/auth/validate` - **Валидация токена**: валидация access-token-а по refresh-token-у
 - `/auth/refresh` - **Обновление пары токенов**: обновление пары токенов по refresh-token-у и возвращение пары токенов
 
 #### Пользователь
