@@ -5,9 +5,13 @@
 
 .product-input {
 	width: 100%;
-	border: 1px solid var(--add-color);
+	border: 1px solid var(--text-color);
 	border-radius: 5px;
 	padding: 5px;
+
+	transition:
+		color 0.15s,
+		border-color 0.15s;
 }
 
 .product-search-menu {

@@ -4,7 +4,9 @@
 	border: 1px solid var(--text-color);
 	border-radius: 5px;
 
-	transition: border-color 0.2s;
+	transition:
+		border-color 0.2s,
+		color 0.15s;
 
 	&:focus {
 		border-color: var(--secondary-color);
