@@ -2,6 +2,7 @@ import jwt
 import bcrypt
 
 from datetime import datetime, timedelta
+from fastapi import HTTPException, status
 
 from ..models import users
 from ..config import settings
@@ -30,8 +31,11 @@ def decode_jwt(
     public_key : str = settings.auth_jwt.public_key_path.read_text(),
     algorithm : str = settings.auth_jwt.algorihm,
 ):
-    decoded = jwt.decode(token, public_key, algorithms=[algorithm])
-    return decoded
+    try:
+        decoded = jwt.decode(token, public_key, algorithms=[algorithm])
+        return decoded
+    except:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 def get_hash_password(password: str) -> bytes:
     bytes = password.encode('utf-8')
