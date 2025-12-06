@@ -1,5 +1,6 @@
 "use client"
 
+import { useAtom } from "jotai"
 import { useRef, useState, type InputHTMLAttributes } from "react"
 import {
 	useController,
@@ -8,6 +9,8 @@ import {
 } from "react-hook-form"
 
 import { products } from "@/data"
+
+import { newProductModalAtom } from "@/stores/newProductModal.store"
 import styles from "./ProductInput.module.scss"
 
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -37,6 +40,8 @@ export default function ProductInput({
 	const [isActive, setIsActive] = useState<boolean>(false)
 	const [hints, setHints] = useState<{ id: string; name: string }[]>([])
 	const [inputValue, setInputValue] = useState<string>("")
+
+	const [_, setNewProductModalState] = useAtom(newProductModalAtom)
 
 	const displayValue =
 		inputValue ||
@@ -94,7 +99,7 @@ export default function ProductInput({
 	}
 
 	const handleNewProduct = () => {
-		console.log("Создание нового продукта")
+		setNewProductModalState(true)
 
 		setIsActive(false)
 
