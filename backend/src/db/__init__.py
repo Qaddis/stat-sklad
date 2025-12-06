@@ -1,1 +1,1 @@
-from .database import Base, session_factory
+from .database import Base, session_factory, get_db
