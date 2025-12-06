@@ -28,7 +28,14 @@
 .inp-with-label {
 	display: flex;
 	flex-direction: column;
-	width: 50%;
+
+	&:nth-child(1) {
+		width: 65%;
+	}
+
+	&:nth-child(2) {
+		width: 35%;
+	}
 }
 
 .quantity-inp-field {
@@ -45,6 +52,10 @@
 		appearance: none;
 		-webkit-appearance: none;
 		-moz-appearance: none;
+	}
+
+	&:focus {
+		border-color: var(--secondary-color);
 	}
 }
 

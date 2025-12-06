@@ -1,6 +1,7 @@
 "use client"
 
 import { useAtom } from "jotai"
+import { AnimatePresence, motion } from "motion/react"
 import { useRef, useState, type InputHTMLAttributes } from "react"
 import {
 	useController,
@@ -8,10 +9,12 @@ import {
 	type RegisterOptions
 } from "react-hook-form"
 
-import { products } from "@/data"
-
 import { newProductModalAtom } from "@/stores/newProductModal.store"
+
 import styles from "./ProductInput.module.scss"
+
+// FIXME:
+import { products } from "@/data"
 
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
 	name: string
@@ -134,39 +137,60 @@ export default function ProductInput({
 				onChange={handleInputChange}
 			/>
 
-			{isActive && (
-				<ul className={styles["product-search-menu"]}>
-					{hints.length > 0 ? (
-						hints.map(hint => (
-							<li key={hint.id}>
+			<AnimatePresence>
+				{isActive && (
+					<motion.ul
+						className={styles["product-search-menu"]}
+						initial={{
+							height: "0",
+							opacity: 0
+						}}
+						animate={{
+							height: "auto",
+							opacity: 1
+						}}
+						exit={{
+							height: "0",
+							opacity: 0
+						}}
+						transition={{
+							height: { duration: 0.2, ease: "easeInOut" },
+							opacity: { duration: 0.4 }
+						}}
+					>
+						{hints.length > 0 ? (
+							hints.map(hint => (
+								<li key={hint.id}>
+									<button
+										className={styles["hint-btn"]}
+										onMouseDown={e => {
+											e.preventDefault()
+											handleSelectProduct(hint.id, hint.name)
+										}}
+										type="button"
+										title={hint.name}
+									>
+										{hint.name}
+									</button>
+								</li>
+							))
+						) : (
+							<li>
 								<button
-									className={styles["hint-btn"]}
+									className={styles["no-hints-btn"]}
 									onMouseDown={e => {
 										e.preventDefault()
-										handleSelectProduct(hint.id, hint.name)
+										handleNewProduct()
 									}}
 									type="button"
 								>
-									{hint.name}
+									Добавить продукт
 								</button>
 							</li>
-						))
-					) : (
-						<li>
-							<button
-								className={styles["no-hints-btn"]}
-								onMouseDown={e => {
-									e.preventDefault()
-									handleNewProduct()
-								}}
-								type="button"
-							>
-								Добавить продукт
-							</button>
-						</li>
-					)}
-				</ul>
-			)}
+						)}
+					</motion.ul>
+				)}
+			</AnimatePresence>
 		</div>
 	)
 }
