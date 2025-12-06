@@ -3,6 +3,7 @@ import { Martian_Mono, Roboto } from "next/font/google"
 
 import AppFooter from "@/components/layout/AppFooter"
 import AppHeader from "@/components/layout/AppHeader"
+import NewProductModal from "@/components/layout/NewProductModal"
 
 import "@/assets/styles/globals.scss"
 
@@ -80,6 +81,8 @@ export default function RootLayout({
 				<main className="main">
 					<div className="wrapper">{children}</div>
 				</main>
+
+				<NewProductModal />
 
 				<AppFooter />
 			</body>
