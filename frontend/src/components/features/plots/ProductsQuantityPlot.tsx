@@ -52,7 +52,7 @@ export default function ProductsQuantityPlot({
 
 	const chartDefaults: Data = {
 		type: "pie",
-		textinfo: "label+percent",
+		textinfo: "label+text",
 		textposition: "inside",
 		hoverinfo: "label+text+percent",
 		insidetextfont: {

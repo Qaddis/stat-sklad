@@ -14,7 +14,7 @@ import { products } from "@/data"
 export default function DashboardPage() {
 	return (
 		<div className={styles.page}>
-			<PageHeading>Дашбоард</PageHeading>
+			<PageHeading>Дашборд</PageHeading>
 
 			<aside className={styles["search-block"]}>
 				<div className={styles["search-block__search-sect"]}>
