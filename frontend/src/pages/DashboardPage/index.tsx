@@ -3,8 +3,8 @@
 import { ArrowBackIosNew, ArrowForwardIos, Search } from "@mui/icons-material"
 
 import PageHeading from "@/components/ui/PageHeading"
-import { UnitsEnum } from "@/types/products.types"
 import { formatDate } from "@/utils/datetime.utils"
+import { getProductUnitsLabel } from "@/utils/labels.utils"
 
 import styles from "./DashboardPage.module.scss"
 
@@ -14,7 +14,7 @@ import { products } from "@/data"
 export default function DashboardPage() {
 	return (
 		<div className={styles.page}>
-			<PageHeading>Дашбоард</PageHeading>
+			<PageHeading>Дашборд</PageHeading>
 
 			<aside className={styles["search-block"]}>
 				<div className={styles["search-block__search-sect"]}>
@@ -33,10 +33,9 @@ export default function DashboardPage() {
 					defaultValue="25"
 					className={styles["search-block__pagination-size-select"]}
 				>
+					<option value="10">10</option>
 					<option value="25">25</option>
 					<option value="50">50</option>
-					<option value="75">75</option>
-					<option value="100">100</option>
 				</select>
 
 				<div className={styles["search-block__pagination-page-num"]}>
@@ -78,8 +77,7 @@ export default function DashboardPage() {
 									{product.name}
 								</td>
 								<td className={styles["products-table__data-col"]}>
-									{product.quantity}{" "}
-									{product.units === UnitsEnum.KILOGRAMS ? "кг." : "шт."}
+									{product.quantity} {getProductUnitsLabel(product.units)}
 								</td>
 								<td className={styles["products-table__data-col"]}>
 									{formatDate(product.lastSupply)}

@@ -17,7 +17,7 @@ export default function AppFooter() {
 		<footer className={styles.footer}>
 			<div className={styles.wrapper}>
 				<p className={styles.copyright}>
-					Святослав &ldquo;Qaddis&rdquo; Барсуков &copy;
+					Святослав &ldquo;Qaddis&rdquo; Барсуков &copy; 2025
 				</p>
 
 				<a className={styles["go_up-btn"]} href="#" onClick={goUp}>

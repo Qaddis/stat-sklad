@@ -62,3 +62,5 @@ pnpm start
 6. Запросы - **axios**
 7. Валидация данных - **Zod**
 8. Работа с формами - **react-hook-form**
+9. Иконки - **Material UI**
+10. Анимации - **Motion**

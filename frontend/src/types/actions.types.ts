@@ -19,3 +19,13 @@ export const enum ActionTypeEnum {
 	WRITE_OFF = "WRITE_OFF",
 	TAKEN = "TAKEN"
 }
+
+export interface IActionFormData {
+	type: keyof typeof ActionTypeEnum
+	products: IActionItemFormData[]
+}
+
+export interface IActionItemFormData {
+	ingredient_id: string
+	quantity: number
+}

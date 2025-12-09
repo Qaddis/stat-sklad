@@ -12,6 +12,11 @@
 	--add-color: var(--add-light-color);
 	--text-color: var(--main-dark-color);
 
+	--icon-calendar-dark: url("../calendar_dark.svg");
+	--icon-calendar-light: url("../calendar_light.svg");
+
+	--icon-calendar: var(--icon-calendar-dark);
+
 	/*
 		--martian-font
 		--roboto-font
