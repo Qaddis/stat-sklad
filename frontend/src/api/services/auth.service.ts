@@ -1,6 +1,6 @@
 import axios from "axios"
 
-import { API_URL } from "@/constants/api.constants"
+import { API_URL, EndpointsEnum } from "@/constants/api.constants"
 import type { IAuthResponse } from "@/types/auth.types"
 import { getContentType } from "@/utils/api.utils"
 import { getRefreshToken, saveTokens } from "../auth.helper"
@@ -14,7 +14,7 @@ class AuthService {
 		const refreshToken = getRefreshToken()
 
 		const response = await axios.post<IAuthResponse>(
-			API_URL + "/auth/refresh",
+			API_URL + EndpointsEnum.AUTH.REFRESH,
 			{
 				refresh_token: refreshToken
 			},
