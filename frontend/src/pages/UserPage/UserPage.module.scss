@@ -19,7 +19,9 @@
 		border-radius: 5px;
 		padding: 3.5px;
 
-		transition: border-color 0.2s;
+		transition:
+			border-color 0.2s,
+			color 0.15s;
 
 		&:focus {
 			border-color: var(--secondary-color);
@@ -31,15 +33,19 @@
 		}
 	}
 
-	&__label:has(.help) {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 3.5px;
+	&__label {
+		transition: color 0.15s;
 
-		.help {
-			width: 1.35rem;
-			color: var(--primary-color);
+		&:has(.help) {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 3.5px;
+
+			.help {
+				width: 1.35rem;
+				color: var(--primary-color);
+			}
 		}
 	}
 }
@@ -52,8 +58,9 @@
 	color: var(--main-color);
 	background-color: var(--primary-color);
 
-	transition-property: border-color, background-color, translate, opacity;
-	transition-duration: 0.2s, 0.2s, 0.15s, 0.15s;
+	transition-property:
+		border-color, background-color, translate, opacity, color;
+	transition-duration: 0.2s, 0.2s, 0.15s, 0.15s, 0.15s;
 
 	&:hover {
 		border-color: var(--secondary-color);

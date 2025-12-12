@@ -3,6 +3,7 @@ import { Martian_Mono, Roboto } from "next/font/google"
 
 import AppFooter from "@/components/layout/AppFooter"
 import AppHeader from "@/components/layout/AppHeader"
+import NewProductModal from "@/components/layout/NewProductModal"
 
 import "@/assets/styles/globals.scss"
 
@@ -63,6 +64,10 @@ export default function RootLayout({
 												"--text-color",
 												isDarkMode ? "var(--main-light-color)" : "var(--main-dark-color)"
 											)
+											root.style.setProperty(
+												"--icon-calendar",
+												isDarkMode ? "var(--icon-calendar-light)" : "var(--icon-calendar-dark)"
+											)
 										} catch (e) {
 											console.error("Ошибка загрузки темы:", e)
 										}
@@ -76,6 +81,8 @@ export default function RootLayout({
 				<main className="main">
 					<div className="wrapper">{children}</div>
 				</main>
+
+				<NewProductModal />
 
 				<AppFooter />
 			</body>

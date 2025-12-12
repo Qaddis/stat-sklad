@@ -21,7 +21,8 @@ export default function NavLink({ children, to, className, ...props }: IProps) {
 		let totalClassName = styles.link
 
 		if (className) totalClassName += " " + className
-		if (path === to) totalClassName += " " + styles["--active"]
+		if (path === to || path?.split("/")[1] === to.split("/")[1])
+			totalClassName += " " + styles["--active"]
 
 		return totalClassName
 	}

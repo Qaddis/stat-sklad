@@ -1,0 +1,153 @@
+.form {
+	width: max(65%, 300px);
+	margin: 0 auto;
+
+	display: flex;
+	flex-direction: column;
+}
+
+.product {
+	border: 2px dashed var(--add-color);
+	border-radius: 5px;
+	padding: 10px;
+	margin-bottom: 15px;
+
+	display: flex;
+	justify-content: space-between;
+	gap: 0 10px;
+
+	transition: border-color 0.15s;
+
+	label {
+		margin-bottom: 3.5px;
+
+		transition: color 0.15s;
+	}
+}
+
+.inp-with-label {
+	display: flex;
+	flex-direction: column;
+
+	&:nth-child(1) {
+		width: 65%;
+	}
+
+	&:nth-child(2) {
+		width: 35%;
+	}
+}
+
+.quantity-inp-field {
+	border: 1px solid var(--text-color);
+	border-radius: 5px;
+	padding: 5px;
+
+	transition:
+		color 0.15s,
+		border-color 0.15s;
+
+	&::-webkit-inner-spin-button,
+	&::-webkit-outer-spin-button {
+		appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+	}
+
+	&:focus {
+		border-color: var(--secondary-color);
+	}
+}
+
+.remove-btn {
+	width: 3.2rem;
+	height: 3.2rem;
+	margin: auto 0;
+	border: 1px solid var(--text-color);
+	border-radius: 5px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	transition:
+		background-color 0.2s,
+		opacity 0.15s,
+		color 0.15s,
+		border-color 0.15s;
+
+	&:disabled {
+		opacity: 0.55;
+		background-color: var(--add-color);
+		border-color: var(--add-color);
+		cursor: not-allowed;
+	}
+
+	&:not(:disabled):hover {
+		background-color: var(--add-color);
+	}
+
+	&:not(:disabled):active {
+		opacity: 0.75;
+	}
+}
+
+.error {
+	color: salmon;
+	text-wrap: wrap;
+	margin-top: 3.5px;
+}
+
+.add_product-btn {
+	width: 100%;
+	border: 2px dashed var(--add-color);
+	border-radius: 5px;
+	padding: 5px 20px;
+	margin-bottom: 35px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	transition-property: border, background-color, opacity, translate;
+	transition-duration: 0.2s, 0.2s, 0.15s, 0.15s;
+
+	transition:
+		border-color 0.15s,
+		color 0.15s;
+
+	svg {
+		font-size: 1.35rem;
+	}
+
+	&:hover {
+		border: 2px solid var(--add-color);
+		background-color: var(--add-color);
+	}
+
+	&:active {
+		opacity: 0.85;
+		translate: 0 2px;
+	}
+}
+
+.submit-btn {
+	width: 100%;
+	font-size: 1.1rem;
+	border: 2px solid var(--add-color);
+	border-radius: 5px;
+	padding: 7.5px 25px;
+
+	transition-property:
+		background-color, translate, opacity, border-color, color;
+	transition-duration: 0.2s, 0.15s, 0.15s, 0.15s, 0.15s;
+
+	&:hover {
+		background-color: var(--add-color);
+	}
+
+	&:active {
+		translate: 0 2px;
+		opacity: 0.85;
+	}
+}

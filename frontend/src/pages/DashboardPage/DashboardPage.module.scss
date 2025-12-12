@@ -13,6 +13,8 @@
 	margin-bottom: 20px;
 	padding: 10px;
 
+	transition: border-color 0.15s;
+
 	&__search-sect {
 		display: flex;
 		align-items: center;
@@ -24,6 +26,7 @@
 		padding: 3.5px;
 		border-bottom: 2px solid var(--text-color);
 		flex-grow: 1;
+
 		transition: border-color 0.2s;
 
 		&:focus {
@@ -68,6 +71,10 @@
 		border-radius: 5px;
 		outline: none !important;
 
+		transition:
+			color 0.15s,
+			border-color 0.15s;
+
 		&:focus {
 			border-color: var(--secondary-color);
 		}
@@ -82,6 +89,8 @@
 	&__page-num {
 		font-size: 1.15rem;
 
+		transition: color 0.15s;
+
 		span {
 			opacity: 0.65;
 		}
@@ -93,14 +102,24 @@
 	border-collapse: collapse;
 	border: 2px solid var(--add-color);
 
+	transition: border-color 0.15s;
+
 	&__heading {
 		font-size: 1.1rem;
 		border: 1px solid var(--add-color);
 		padding: 5px;
+
+		transition:
+			border-color 0.15s,
+			color 0.15s;
 	}
 
 	&__data-col {
 		border: 1px solid var(--add-color);
 		padding: 5px;
+
+		transition:
+			border-color 0.15s,
+			color 0.15s;
 	}
 }

@@ -24,15 +24,39 @@
 	border: 2px solid var(--add-color);
 	table-layout: auto;
 
+	transition:
+		border-color 0.15s,
+		color 0.15s;
+
 	&__heading {
 		font-size: 1.1rem;
 		border: 1px solid var(--add-color);
 		padding: 5px;
+
+		transition: border-color 0.15s;
 	}
 
 	&__data-col {
 		border: 1px solid var(--add-color);
 		padding: 5px;
+
+		transition: border-color 0.15s;
+
+		&:nth-child(2) {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			font-weight: 600;
+
+			i {
+				font-weight: 400;
+				margin-left: 0.35rem;
+
+				&:first-child {
+					margin-left: 0;
+				}
+			}
+		}
 
 		&:last-child {
 			padding: 0;

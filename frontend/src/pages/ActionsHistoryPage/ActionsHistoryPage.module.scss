@@ -1,0 +1,168 @@
+.actions-table {
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+	border: 2px solid var(--add-color);
+
+	transition:
+		border-color 0.15s,
+		color 0.15s;
+
+	&__heading {
+		font-size: 1.1rem;
+		border: 1px solid var(--add-color);
+		padding: 5px;
+
+		transition: border-color 0.15s;
+	}
+
+	&__data-col {
+		border: 1px solid var(--add-color);
+		padding: 5px;
+
+		transition: border-color 0.15s;
+
+		&:nth-child(2) {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			font-weight: 600;
+
+			i {
+				font-weight: 400;
+				margin-left: 0.35rem;
+
+				&:first-child {
+					margin-left: 0;
+				}
+			}
+		}
+
+		&:last-child {
+			padding: 0;
+
+			a {
+				display: block;
+				width: 100%;
+				padding: 5px;
+				text-align: center;
+				text-decoration: underline;
+				color: var(--text-color);
+
+				transition:
+					0.2s color,
+					0.2s opacity;
+
+				&:hover {
+					color: var(--secondary-color);
+				}
+
+				&:active {
+					opacity: 0.75;
+				}
+			}
+		}
+	}
+}
+
+.search-block {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 25px;
+
+	border: 3px solid var(--add-color);
+	border-radius: 5px;
+	margin-bottom: 20px;
+	padding: 10px;
+
+	transition:
+		border-color 0.15s,
+		color 0.15s;
+
+	&__search-sect {
+		flex-grow: 1;
+		display: flex;
+		align-items: center;
+	}
+
+	&__date-inp {
+		flex-grow: 1;
+		height: 35px;
+		border: 1px solid var(--text-color);
+		border-radius: 5px;
+		padding: 5px;
+		margin: 0 10px 0 3.5px;
+
+		transition: border-color 0.2s;
+
+		&::-webkit-calendar-picker-indicator {
+			background: var(--icon-calendar);
+			background-size: cover;
+			border-radius: 50%;
+			transition: background-color 0.15s;
+		}
+
+		&:focus {
+			border-color: var(--secondary-color);
+		}
+	}
+
+	&__search-btn,
+	&__page-num-btn {
+		width: 35px;
+		height: 35px;
+		border: 1px solid var(--text-color);
+		border-radius: 5px;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		transition-property: background-color, color, border-color;
+		transition-duration: 0.25s, 0.25s, 0.25s;
+
+		&:hover {
+			border-color: var(--primary-color);
+			background-color: var(--primary-color);
+			color: var(--main-color);
+		}
+
+		&:active {
+			background-color: var(--secondary-color);
+			border-color: var(--secondary-color);
+		}
+	}
+
+	&__pagination-size-select {
+		height: 35px;
+		padding: 0 10px;
+		border: 1px solid var(--text-color);
+		border-radius: 5px;
+		outline: none !important;
+
+		transition:
+			color 0.15s,
+			border-color 0.15s;
+
+		&:focus {
+			border-color: var(--secondary-color);
+		}
+	}
+
+	&__pagination-page-num {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	&__page-num {
+		font-size: 1.15rem;
+
+		transition: color 0.15s;
+
+		span {
+			opacity: 0.65;
+		}
+	}
+}

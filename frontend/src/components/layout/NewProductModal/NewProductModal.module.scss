@@ -1,0 +1,107 @@
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 11;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba($color: #000, $alpha: 0.45);
+	padding: 20px;
+	cursor: pointer;
+}
+
+.new_product-modal {
+	position: relative;
+	cursor: default;
+
+	width: max(50%, 300px);
+	background-color: var(--main-color);
+	border: 3px solid var(--add-color);
+	border-radius: 10px;
+	padding: 25px;
+}
+
+.close-btn {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+
+	transition:
+		color 0.2s,
+		opacity 0.15s;
+
+	svg {
+		font-size: 2.15rem;
+	}
+
+	&:hover {
+		color: var(--secondary-color);
+	}
+
+	&:active {
+		opacity: 0.75;
+	}
+}
+
+.heading {
+	text-align: center;
+	font-size: var(--sect-heading-fz);
+	font-family: var(--martian-font);
+	font-weight: 600;
+	color: var(--primary-color);
+	margin-bottom: 15px;
+}
+
+.new-product-form {
+	width: 50%;
+	margin: 0 auto;
+
+	display: flex;
+	flex-direction: column;
+
+	input {
+		margin-bottom: 15px;
+	}
+
+	input,
+	select {
+		border: 1px solid var(--text-color);
+		border-radius: 5px;
+		margin-top: 3.5px;
+		padding: 5px;
+
+		transition: border-color 0.15s;
+
+		&:focus {
+			outline: none !important;
+			border-color: var(--secondary-color);
+		}
+	}
+}
+
+.save-btn {
+	font-size: 1.15rem;
+	border: 1px solid var(--secondary-color);
+	border-radius: 5px;
+	color: var(--secondary-color);
+	padding: 5px 10px;
+	margin-top: 35px;
+
+	transition-property: background-color, color, opacity, translate;
+	transition-duration: 0.2s, 0.2s, 0.15s, 0.15s;
+
+	&:hover {
+		background-color: var(--secondary-color);
+		color: var(--main-color);
+	}
+
+	&:active {
+		opacity: 0.75;
+		translate: 0 2px;
+	}
+}

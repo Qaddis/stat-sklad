@@ -1,3 +1,12 @@
+import type { Metadata } from "next"
+
+import ProductsInteractionPage from "@/pages/ProductsInteractionPage"
+import { ActionTypeEnum } from "@/types/actions.types"
+
+export const metadata: Metadata = {
+	title: "Списание продуктов"
+}
+
 export default function WriteOff() {
-	return <h1>Страница &ldquo;Списать со склада&rdquo;</h1>
+	return <ProductsInteractionPage actionType={ActionTypeEnum.WRITE_OFF} />
 }
