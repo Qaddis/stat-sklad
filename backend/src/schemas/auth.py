@@ -6,6 +6,7 @@ class BaseUser(BaseModel):
     email: EmailStr
     first_name: str
     second_name: str
+    role: users.RolesEnum
     
     
 class RegisterUser(BaseUser):
