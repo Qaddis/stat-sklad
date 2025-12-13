@@ -1,22 +1,43 @@
 import axios from "axios"
 
 import type { IResponseResult } from "@/types/api.types"
-import type { IAuthResponse, ISignUpFormData } from "@/types/auth.types"
+import type {
+	IAuthResponse,
+	ISignInFormData,
+	ISignUpFormData
+} from "@/types/auth.types"
 
 import { API_URL, EndpointsEnum } from "@/constants/api.constants"
 import { apiErrorCatch, getContentType } from "@/utils/api.utils"
 import { getRefreshToken, saveTokens, saveToStorage } from "../auth.helper"
 
 class AuthService {
-	async signIn() {}
+	async signIn(data: ISignInFormData): Promise<IResponseResult<IAuthResponse>> {
+		try {
+			const response = await axios.post<IAuthResponse>(
+				API_URL + EndpointsEnum.AUTH.SIGN_IN,
+				data,
+				{
+					headers: getContentType()
+				}
+			)
+
+			saveToStorage(response.data)
+
+			return {
+				status: response.status,
+				data: response.data
+			}
+		} catch (error) {
+			return apiErrorCatch(error)
+		}
+	}
 
 	async signUp(data: ISignUpFormData): Promise<IResponseResult<IAuthResponse>> {
 		try {
 			const response = await axios.post<IAuthResponse>(
 				API_URL + EndpointsEnum.AUTH.SIGN_UP,
-				{
-					...data
-				},
+				data,
 				{
 					headers: getContentType()
 				}
