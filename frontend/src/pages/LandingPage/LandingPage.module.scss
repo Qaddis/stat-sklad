@@ -1,0 +1,115 @@
+.landing {
+	width: 100%;
+	height: calc(100vh - 92px);
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0 20px;
+
+	&__info {
+		width: 50%;
+	}
+
+	&__title {
+		font-size: calc(var(--page-heading-fz) * 1.5);
+		font-family: var(--martian-font);
+		font-weight: 800;
+		background: linear-gradient(
+			45deg,
+			var(--primary-color),
+			var(--secondary-color)
+		);
+		background-clip: text;
+		color: transparent;
+		margin-bottom: 5px;
+	}
+
+	&__description {
+		font-size: 1.32rem;
+		transition: color 0.15s;
+	}
+
+	&__img {
+		width: 40%;
+		height: auto;
+	}
+}
+
+.advantages {
+	margin: 3vh 0 18vh;
+
+	&__list {
+		width: fit-content;
+		max-width: 60%;
+		margin: 0 auto;
+
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	&__list-item {
+		&::marker {
+			font-family: var(--martian-font);
+			color: var(--secondary-color);
+			font-weight: 600;
+		}
+
+		&__title {
+			font-size: 1.35rem;
+			color: var(--primary-color);
+			font-weight: 600;
+			margin-bottom: 3.5px;
+		}
+
+		&__description {
+			font-size: 1.1rem;
+			transition: color 0.15s;
+		}
+	}
+}
+
+.join-us {
+	margin-bottom: 50px;
+
+	&__title {
+		margin-bottom: 3.5px !important;
+	}
+
+	&__description {
+		width: fit-content;
+		max-width: 75%;
+		margin: 0 auto 35px;
+
+		font-size: 1.2rem;
+		transition: color 0.15s;
+	}
+
+	&__btn {
+		display: block;
+		width: fit-content;
+		border: 1px solid var(--primary-color);
+		border-radius: 5px;
+		padding: 7.5px 20px;
+		margin: 0 auto;
+
+		font-size: 1.15rem;
+		font-weight: 600;
+		text-align: center;
+		color: var(--primary-color);
+
+		transition-property: color, background-color, border-color;
+		transition-duration: 0.2s, 0.2s, 0.2s;
+
+		&:hover {
+			background-color: var(--primary-color);
+			color: var(--main-color);
+		}
+
+		&:active {
+			background-color: var(--secondary-color);
+			border-color: var(--secondary-color);
+		}
+	}
+}

@@ -14,21 +14,18 @@ app = FastAPI(
 
 origins = [settings.FRONTEND_URL]
 
-app.middleware(
-    CORSMiddleware(
-        app,
-        allow_origins=origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(products_router)
 app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(actions_router)
-
 
 
 @app.get("/")
