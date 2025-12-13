@@ -1,2 +1,2 @@
 from .auth import RegisterUser, TokenInfo, AuthUser
-from .user import GetUser
+from .user import GetUser, PatchUser
