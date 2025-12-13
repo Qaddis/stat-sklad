@@ -24,8 +24,6 @@ class SupplyItemModel(Base):
     )
     supply: Mapped["SupplyModel"] = relationship(back_populates="products")
 
-    price: Mapped[float]
-
     quantity: Mapped[int]
 
     def __repr__(self):

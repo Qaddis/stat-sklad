@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 from ..models import users
 
@@ -6,7 +7,7 @@ class BaseUser(BaseModel):
     email: EmailStr
     first_name: str
     second_name: str
-    role: users.RolesEnum
+    role: Optional[users.RolesEnum] = users.RolesEnum.BOOKER
     
     
 class RegisterUser(BaseUser):
