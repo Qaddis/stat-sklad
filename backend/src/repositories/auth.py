@@ -14,15 +14,18 @@ class UserCRUD:
     
     async def get_user_by_email(self, email: str) -> Optional[UserModel]:
         stmt = select(UserModel).where(UserModel.email == email)
-        result = await self.db.execute(stmt)
-        return result.scalar_one_or_none()
+        try:
+            result = await self.db.execute(stmt)
+            return result.scalar_one_or_none()
+        except:
+            return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found")
                 
     async def get_user_by_id(self, id: str) -> Optional[UserModel]:
         stmt = select(UserModel).where(UserModel.id == id)
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
     
-    async def create_user(self, user_in: RegisterUser) -> Optional[UserModel]:
+    async def create_user(self, user_in: RegisterUser) -> Optional[UserModel]:      
         stmt = insert(UserModel).values(
         first_name=user_in['first_name'],
         second_name=user_in['second_name'],

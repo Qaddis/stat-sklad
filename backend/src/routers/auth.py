@@ -22,26 +22,30 @@ security = HTTPBasic()
 async def sign_up(user_in: RegisterUser, db : AsyncSession = Depends(get_db)):
     user_data = user_in.model_dump()
     crud = UserCRUD(db) 
-    result = await crud.create_user(user_data)
-    
-    jwt_payload = {
-        "id": str(result.id),
-        "email": result.email,
-        TOKEN_TYPE_FIELD: ACCESS_TYPE
-    }
-    
-    access_token = encode_jwt(jwt_payload)
-    
-    refresh_token = encode_jwt(
-        {'id': str(result.id),
-        TOKEN_TYPE_FIELD: REFRESH_TYPE},
-        expire_timedelta=timedelta(days=settings.auth_jwt.refresh_token_expire_days))
-    
-    return TokenInfo(
-        user_id=str(result.id),
-        access_token=access_token,
-        refresh_token=refresh_token
-    )
+    existed_user = await crud.get_user_by_email(user_data["email"])
+    if existed_user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user already exist")
+    else:
+        result = await crud.create_user(user_data)
+
+        jwt_payload = {
+            "id": str(result.id),
+            "email": result.email,
+            TOKEN_TYPE_FIELD: ACCESS_TYPE
+        }
+
+        access_token = encode_jwt(jwt_payload)
+
+        refresh_token = encode_jwt(
+            {'id': str(result.id),
+            TOKEN_TYPE_FIELD: REFRESH_TYPE},
+            expire_timedelta=timedelta(days=settings.auth_jwt.refresh_token_expire_days))
+
+        return TokenInfo(
+            user_id=str(result.id),
+            access_token=access_token,
+            refresh_token=refresh_token
+        )
     
     
 @router.post("/sign_in", response_model=Optional[TokenInfo])
