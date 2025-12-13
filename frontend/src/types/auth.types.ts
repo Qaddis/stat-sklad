@@ -6,3 +6,10 @@ export interface ITokens {
 export interface IAuthResponse extends ITokens {
 	user_id: string
 }
+
+export interface ISignUpFormData {
+	first_name: string
+	second_name: string
+	email: string
+	password: string
+}

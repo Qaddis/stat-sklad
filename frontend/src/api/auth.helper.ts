@@ -12,8 +12,10 @@ export const getRefreshToken = (): string | null => {
 }
 
 export const saveTokens = (data: ITokens): void => {
-	Cookies.set(STORAGE_KEYS.ACCESS_TOKEN, data.access_token)
-	Cookies.set(STORAGE_KEYS.REFRESH_TOKEN, data.refresh_token)
+	const options: Cookies.CookieAttributes = { expires: 30 }
+
+	Cookies.set(STORAGE_KEYS.ACCESS_TOKEN, data.access_token, options)
+	Cookies.set(STORAGE_KEYS.REFRESH_TOKEN, data.refresh_token, options)
 }
 
 export const removeTokens = (): void => {

@@ -35,9 +35,12 @@ export const publicPaths = [
 	NavigationEnum.HOME
 ] as const
 
-export const protectedPaths = STATIC_PATHS.filter(
-	path => !path.endsWith("/") && !publicPaths.includes(path as any)
-)
+export const protectedPaths = [
+	...STATIC_PATHS.filter(
+		path => !path.endsWith("/") && !publicPaths.includes(path as any)
+	),
+	NavigationEnum.HOME
+]
 
 export const dynamicPaths = STATIC_PATHS.filter(
 	path => path.endsWith("/") && !publicPaths.some(p => path.startsWith(p))

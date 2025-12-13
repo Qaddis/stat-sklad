@@ -18,17 +18,19 @@ export function proxy(request: NextRequest) {
 	const accessToken = request.cookies.get(STORAGE_KEYS.ACCESS_TOKEN)?.value
 	const path = request.nextUrl.pathname
 
-	if (
-		!accessToken &&
-		(protectedPaths.includes(path) ||
-			dynamicPaths.some(p => path.startsWith(p)))
-	)
-		return NextResponse.redirect(
-			new URL(NavigationEnum.LOGIN.SIGN_IN, request.url)
+	if (path !== NavigationEnum.HOME) {
+		if (
+			!accessToken &&
+			(protectedPaths.includes(path) ||
+				dynamicPaths.some(p => path.startsWith(p)))
 		)
+			return NextResponse.redirect(
+				new URL(NavigationEnum.LOGIN.SIGN_IN, request.url)
+			)
 
-	if (accessToken && publicPaths.includes(path as any))
-		return NextResponse.redirect(new URL(NavigationEnum.USER, request.url))
+		if (accessToken && publicPaths.includes(path as any))
+			return NextResponse.redirect(new URL(NavigationEnum.USER, request.url))
+	}
 
 	return NextResponse.next()
 }

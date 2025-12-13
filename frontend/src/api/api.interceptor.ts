@@ -1,7 +1,7 @@
 import axios from "axios"
 
 import { NavigationEnum } from "@/constants/navigation.constants"
-import { apiErrorCatch, getContentType } from "@/utils/api.utils"
+import { getContentType, getErrorMsg } from "@/utils/api.utils"
 import { getAccessToken, removeTokens } from "./auth.helper"
 import authService from "./services/auth.service"
 
@@ -35,7 +35,7 @@ instance.interceptors.response.use(
 				await authService.getNewTokens()
 				return instance.request(originReq)
 			} catch (error) {
-				const errorMsg = apiErrorCatch(error)
+				const errorMsg = getErrorMsg(error)
 
 				if (errorMsg.includes("token") || errorMsg.includes("unauthorized")) {
 					removeTokens()
