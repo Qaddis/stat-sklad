@@ -23,7 +23,7 @@ async def sign_up(user_in: RegisterUser, db : AsyncSession = Depends(get_db)):
     user_data = user_in.model_dump()
     crud = UserCRUD(db) 
     existed_user = await crud.get_user_by_email(user_data["email"])
-    if existed_user.email == user_data["email"]:
+    if existed_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user already exist")
     else:
         result = await crud.create_user(user_data)
