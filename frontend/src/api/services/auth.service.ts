@@ -13,6 +13,10 @@ class AuthService {
 	async getNewTokens(): Promise<void> {
 		const refreshToken = getRefreshToken()
 
+		if (!refreshToken) {
+			throw new Error("No refresh token available")
+		}
+
 		const response = await axios.post<IAuthResponse>(
 			API_URL + EndpointsEnum.AUTH.REFRESH,
 			{
@@ -31,4 +35,6 @@ class AuthService {
 	}
 }
 
-export default new AuthService()
+const authService = new AuthService()
+
+export default authService

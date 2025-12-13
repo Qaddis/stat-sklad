@@ -1,5 +1,6 @@
 import axios from "axios"
 
+import { NavigationEnum } from "@/constants/navigation.constants"
 import { apiErrorCatch, getContentType } from "@/utils/api.utils"
 import { getAccessToken, removeTokens } from "./auth.helper"
 import authService from "./services/auth.service"
@@ -32,10 +33,16 @@ instance.interceptors.response.use(
 
 			try {
 				await authService.getNewTokens()
-
 				return instance.request(originReq)
 			} catch (error) {
-				if (apiErrorCatch(error) === "token is not valid") removeTokens()
+				const errorMsg = apiErrorCatch(error)
+
+				if (errorMsg.includes("token") || errorMsg.includes("unauthorized")) {
+					removeTokens()
+
+					if (typeof window !== "undefined")
+						window.location.href = NavigationEnum.LOGIN.SIGN_IN
+				}
 			}
 		}
 
