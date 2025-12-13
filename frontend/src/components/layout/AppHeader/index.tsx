@@ -6,13 +6,21 @@ import Link from "next/link"
 import { useState } from "react"
 
 import Logo from "@/assets/Logo.png"
-import { NavigationEnum } from "@/constants/navigation.constants"
+import {
+	authorizedLinks,
+	NavigationEnum,
+	unauthorizedLinks
+} from "@/constants/navigation.constants"
 import ThemeSwitchButton from "../../features/ThemeSwitch"
 import NavLink from "../../ui/NavLink"
 
 import styles from "./AppHeader.module.scss"
 
-export default function AppHeader() {
+interface IProps {
+	isAuthorized: boolean
+}
+
+export default function AppHeader({ isAuthorized }: IProps) {
 	const [isHidden, setIsHidden] = useState<boolean>(false)
 
 	const { scrollY } = useScroll()
@@ -47,10 +55,13 @@ export default function AppHeader() {
 
 				<div className={styles.buttons}>
 					<nav className={styles.nav}>
-						<NavLink to={NavigationEnum.HOME}>Главная</NavLink>
-						<NavLink to={NavigationEnum.DASHBOARD}>Дашборд</NavLink>
-						<NavLink to={NavigationEnum.ACTIONS.ALL}>Действия</NavLink>
-						<NavLink to={NavigationEnum.USER}>Профиль</NavLink>
+						{(isAuthorized ? authorizedLinks : unauthorizedLinks).map(
+							(item, idx) => (
+								<NavLink key={`header-link-${idx}`} to={item.link}>
+									{item.title}
+								</NavLink>
+							)
+						)}
 					</nav>
 
 					<ThemeSwitchButton />

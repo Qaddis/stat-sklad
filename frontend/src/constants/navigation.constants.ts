@@ -1,3 +1,10 @@
+import type { NavigationRoutesType } from "@/types/navigation.types"
+
+interface NavLinks {
+	title: string
+	link: NavigationRoutesType
+}
+
 export const NavigationEnum = {
 	HOME: "/",
 	DASHBOARD: "/dashboard",
@@ -16,3 +23,33 @@ export const NavigationEnum = {
 		SIGN_UP: "/login/sign-up"
 	}
 } as const
+
+export const authorizedLinks: NavLinks[] = [
+	{
+		title: "Главная",
+		link: NavigationEnum.HOME
+	},
+	{
+		title: "Дашборд",
+		link: NavigationEnum.DASHBOARD
+	},
+	{
+		title: "Действия",
+		link: NavigationEnum.ACTIONS.ALL
+	},
+	{
+		title: "Профиль",
+		link: NavigationEnum.USER
+	}
+]
+
+export const unauthorizedLinks: NavLinks[] = [
+	{
+		title: "Главная",
+		link: NavigationEnum.HOME
+	},
+	{
+		title: "Вход",
+		link: NavigationEnum.LOGIN.SIGN_IN
+	}
+]
