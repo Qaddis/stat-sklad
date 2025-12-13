@@ -1,3 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import type { NavigationRoutesType } from "@/types/navigation.types"
+import { getStaticPaths } from "@/utils/navigation.utils"
+
+interface NavLinks {
+	title: string
+	link: NavigationRoutesType
+}
+
 export const NavigationEnum = {
 	HOME: "/",
 	DASHBOARD: "/dashboard",
@@ -16,3 +26,52 @@ export const NavigationEnum = {
 		SIGN_UP: "/login/sign-up"
 	}
 } as const
+
+const STATIC_PATHS = getStaticPaths(NavigationEnum)
+
+export const publicPaths = [
+	NavigationEnum.LOGIN.SIGN_IN,
+	NavigationEnum.LOGIN.SIGN_UP,
+	NavigationEnum.HOME
+] as const
+
+export const protectedPaths = [
+	...STATIC_PATHS.filter(
+		path => !path.endsWith("/") && !publicPaths.includes(path as any)
+	),
+	NavigationEnum.HOME
+]
+
+export const dynamicPaths = STATIC_PATHS.filter(
+	path => path.endsWith("/") && !publicPaths.some(p => path.startsWith(p))
+)
+
+export const authorizedLinks: NavLinks[] = [
+	{
+		title: "Главная",
+		link: NavigationEnum.HOME
+	},
+	{
+		title: "Дашборд",
+		link: NavigationEnum.DASHBOARD
+	},
+	{
+		title: "Действия",
+		link: NavigationEnum.ACTIONS.ALL
+	},
+	{
+		title: "Профиль",
+		link: NavigationEnum.USER
+	}
+]
+
+export const unauthorizedLinks: NavLinks[] = [
+	{
+		title: "Главная",
+		link: NavigationEnum.HOME
+	},
+	{
+		title: "Вход",
+		link: NavigationEnum.LOGIN.SIGN_IN
+	}
+]

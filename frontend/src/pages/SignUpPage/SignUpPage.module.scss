@@ -6,26 +6,37 @@
 	flex-direction: column;
 
 	label {
-		margin-bottom: 3px;
+		margin: 15px 0 3px;
 
 		transition: color 0.15s;
+
+		&:first-child {
+			margin-top: 0;
+		}
 	}
 
 	input[type="email"],
 	input[type="text"] {
-		margin-bottom: 15px;
-
 		transition:
 			color 0.15s,
 			border-color 0.15s;
 	}
 
-	div {
-		margin-bottom: 30px;
+	div input {
+		margin: 0 !important;
+	}
 
-		input {
-			margin: 0 !important;
-		}
+	&-error {
+		font-size: 1.1rem;
+		font-weight: 600;
+		text-align: center;
+		color: salmon;
+		margin-top: 3.5px;
+	}
+
+	&_field-error {
+		margin-top: 1.5px;
+		color: salmon;
 	}
 }
 
@@ -33,7 +44,7 @@
 	width: max(50%, 150px);
 	border: 1px solid var(--primary-color);
 	border-radius: 5px;
-	margin: 0 auto;
+	margin: 30px auto 0;
 	padding: 7.5px 15px;
 
 	font-size: 1.1rem;
@@ -51,5 +62,23 @@
 		background-color: var(--secondary-color);
 		border-color: var(--secondary-color);
 		translate: 0 2px;
+	}
+}
+
+.another-login-option {
+	text-align: center;
+	margin-top: 20px;
+
+	transition: color 0.15s;
+
+	a {
+		color: var(--primary-color);
+		text-decoration: underline;
+
+		transition: color 0.2s;
+
+		&:hover {
+			color: var(--secondary-color);
+		}
 	}
 }

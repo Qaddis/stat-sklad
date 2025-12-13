@@ -1,9 +1,11 @@
 import type { Metadata } from "next"
 import { Martian_Mono, Roboto } from "next/font/google"
+import { cookies as getCookies } from "next/headers"
 
 import AppFooter from "@/components/layout/AppFooter"
 import AppHeader from "@/components/layout/AppHeader"
 import NewProductModal from "@/components/layout/NewProductModal"
+import { STORAGE_KEYS } from "@/constants/api.constants"
 
 import "@/assets/styles/globals.scss"
 
@@ -34,11 +36,14 @@ export const metadata: Metadata = {
 	]
 }
 
-export default function RootLayout({
+export default async function RootLayout({
 	children
 }: Readonly<{
 	children: React.ReactNode
 }>) {
+	const cookies = await getCookies()
+	const accessToken = cookies.get(STORAGE_KEYS.ACCESS_TOKEN)?.value
+
 	return (
 		<html lang="ru" suppressHydrationWarning>
 			<body className={`${martianMono.variable} ${roboto.variable}`}>
@@ -76,7 +81,7 @@ export default function RootLayout({
 					}}
 				/>
 
-				<AppHeader />
+				<AppHeader isAuthorized={!!accessToken} />
 
 				<main className="main">
 					<div className="wrapper">{children}</div>

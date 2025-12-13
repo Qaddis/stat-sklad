@@ -1,4 +1,5 @@
 export { actions } from "./actions.data"
+export { advantages } from "./advanatages.data"
 export { notifications } from "./notifications.data"
 export { products } from "./products.data"
 export { suppliesCount } from "./stats.data"
