@@ -22,3 +22,6 @@ class TokenInfo(BaseModel):
     access_token: str
     refresh_token: str | None = None
     token_type: str = "Bearer"
+    
+class RefreshInfo(BaseModel):
+    refresh_token: str
