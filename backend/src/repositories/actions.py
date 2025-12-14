@@ -38,6 +38,8 @@ class ActionsCRUD:
             if type_of_supply == OFF:
                 supply_item["quantity"] = -supply_item["quantity"]
             existed_product = await self.get_product(supply_item["ingredient_id"])
+            if type_of_supply == OFF and (existed_product.quantity < abs(supply_item["quantity"])):
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="there are not many products")
             quantity_of_items = supply_item["quantity"]
             
             # изменяем значение кол-ва продукта
