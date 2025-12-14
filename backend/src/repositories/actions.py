@@ -7,6 +7,9 @@ import uuid
 from ..schemas import CreateSupply
 from ..models import ProductModel, SupplyModel, SupplyItemModel
 
+ADD = "add"
+OFF = "write-off"
+
 class ActionsCRUD:
     def __init__(self, db: AsyncSession):
         self.db  = db
@@ -19,7 +22,7 @@ class ActionsCRUD:
         except:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="unexisted ingredient")
         
-    async def create_supply(self, supply_content: CreateSupply):
+    async def create_supply(self, supply_content: CreateSupply, type_of_supply: str):
         # берем список продуктов в виде словаря
         supply_content = supply_content.model_dump()
         supply_content = supply_content["suply_content"]
@@ -32,6 +35,8 @@ class ActionsCRUD:
         
         # перебираем список продуктов и сохранияем кол-во продуктов в отдельную переменную
         for supply_item in supply_content:
+            if type_of_supply == OFF:
+                supply_item["quantity"] = -supply_item["quantity"]
             existed_product = await self.get_product(supply_item["ingredient_id"])
             quantity_of_items = supply_item["quantity"]
             
