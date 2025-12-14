@@ -20,28 +20,37 @@ class ActionsCRUD:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="unexisted ingredient")
         
     async def create_supply(self, supply_content: CreateSupply):
+        # берем список продуктов в виде словаря
         supply_content = supply_content.model_dump()
         supply_content = supply_content["suply_content"]
         
+        # создаем supplie и берем его id
         stmt = insert(SupplyModel).values(id=uuid.uuid4())
         compiled = stmt.compile()
         await self.db.execute(stmt)
         supply_id = compiled.params["id"]
         
+        # перебираем список продуктов и сохранияем кол-во продуктов в отдельную переменную
         for supply_item in supply_content:
             existed_product = await self.get_product(supply_item["ingredient_id"])
+            quantity_of_items = supply_item["quantity"]
+            
+            # изменяем значение кол-ва продукта
             if existed_product:
                 supply_item["quantity"] = existed_product.quantity + supply_item["quantity"]
                 stmt = update(ProductModel).where(
                     ProductModel.ingredient_id == supply_item["ingredient_id"]).values(supply_item)
                 await self.db.execute(stmt)
+            
+            # добавляем новый продукт    
             else:
                 stmt = insert(ProductModel).values(supply_item)
                 await self.db.execute(stmt)
+                
             stmt = insert(SupplyItemModel).values(
                 product_id=supply_item["ingredient_id"],
                 supply_id=supply_id,
-                quantity=supply_item["quantity"]
+                quantity=quantity_of_items
             )
             await self.db.execute(stmt)
             

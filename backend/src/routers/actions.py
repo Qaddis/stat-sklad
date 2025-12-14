@@ -13,3 +13,9 @@ async def create_supply(supply_data: CreateSupply, db: AsyncSession = Depends(ge
     crud = ActionsCRUD(db)
     await crud.create_supply(supply_data)
     return status.HTTP_200_OK
+
+@router.post("/write-off")
+async def del_suply(supply_data: CreateSupply, db: AsyncSession = Depends(get_db), user_id: str = Depends(check_token)):
+    crud = ActionsCRUD(db)
+    await crud.create_supply(supply_data)
+    return status.HTTP_200_OK
