@@ -1,9 +1,9 @@
 from ..models import IngredientModel
-from ..schemas import HintObject, Hint
+from ..schemas import HintObject, Hint, AddIngredients
 
 from typing import Optional
 from fastapi import HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 class IngredientsCRUD:
@@ -26,3 +26,11 @@ class IngredientsCRUD:
             return all_hints
         except:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    async def add_ingredient(self, ingredient_data: AddIngredients):
+        ingredient_data = ingredient_data.model_dump()
+        stmt = insert(IngredientModel).values(
+            name=ingredient_data["name"],
+            units=ingredient_data["units"]
+        )
+        await self.db.execute(stmt)
