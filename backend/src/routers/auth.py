@@ -4,7 +4,7 @@ from fastapi.security import HTTPBasic
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import timedelta
 
-from ..schemas import RegisterUser, TokenInfo, AuthUser
+from ..schemas import RegisterUser, TokenInfo, AuthUser, RefreshInfo
 from ..repositories import UserCRUD
 from ..db import get_db
 from ..config import settings
@@ -81,8 +81,9 @@ async def sign_in(auth_data: AuthUser, db: AsyncSession = Depends(get_db)):
     
     
 @router.post("/refresh", response_model=Optional[TokenInfo])
-async def refresh_token(refresh_token : str, db : AsyncSession = Depends(get_db)):
-    payload = decode_jwt(refresh_token)
+async def refresh_token(refresh_token : RefreshInfo, db : AsyncSession = Depends(get_db)):
+    refresh_data = refresh_token.model_dump()
+    payload = decode_jwt(refresh_data['refresh_token'])
     
     crud = UserCRUD(db)
     result = await crud.get_user_by_id(payload['id'])
