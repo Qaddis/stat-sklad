@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, select, update
 from typing import Optional
 from fastapi import status, HTTPException
+from datetime import datetime, UTC
 import uuid
 
 from ..schemas import CreateSupply
@@ -45,12 +46,19 @@ class ActionsCRUD:
             # изменяем значение кол-ва продукта
             if existed_product:
                 supply_item["quantity"] = existed_product.quantity + supply_item["quantity"]
-                stmt = update(ProductModel).where(
-                    ProductModel.ingredient_id == supply_item["ingredient_id"]).values(supply_item)
-                await self.db.execute(stmt)
+                if type_of_supply == ADD:
+                    supply_item["last_supply"] = datetime.now(UTC)
+                    stmt = update(ProductModel).where(
+                        ProductModel.ingredient_id == supply_item["ingredient_id"]).values(supply_item)
+                    await self.db.execute(stmt)
+                else:
+                    stmt = update(ProductModel).where(
+                        ProductModel.ingredient_id == supply_item["ingredient_id"]).values(supply_item)
+                    await self.db.execute(stmt)
             
             # добавляем новый продукт    
             else:
+                supply_item["last_supply"] = datetime.now(UTC)
                 stmt = insert(ProductModel).values(supply_item)
                 await self.db.execute(stmt)
                 
