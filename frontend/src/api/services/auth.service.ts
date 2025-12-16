@@ -37,7 +37,10 @@ class AuthService {
 		try {
 			const response = await axios.post<IAuthResponse>(
 				API_URL + EndpointsEnum.AUTH.SIGN_UP,
-				data,
+				{
+					...data,
+					role: "BOOKER"
+				},
 				{
 					headers: getContentType()
 				}
@@ -64,9 +67,9 @@ class AuthService {
 		const response = await axios.post<IAuthResponse>(
 			API_URL + EndpointsEnum.AUTH.REFRESH,
 			{
-				refresh_token: refreshToken
-			},
-			{
+				params: {
+					refresh_token: refreshToken
+				},
 				headers: getContentType()
 			}
 		)

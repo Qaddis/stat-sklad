@@ -2,9 +2,7 @@ import type { Metadata } from "next"
 import { Martian_Mono, Roboto } from "next/font/google"
 import { cookies as getCookies } from "next/headers"
 
-import AppFooter from "@/components/layout/AppFooter"
-import AppHeader from "@/components/layout/AppHeader"
-import NewProductModal from "@/components/layout/NewProductModal"
+import Providers from "@/components/layout/Providers"
 import { STORAGE_KEYS } from "@/constants/api.constants"
 
 import "@/assets/styles/globals.scss"
@@ -81,15 +79,7 @@ export default async function RootLayout({
 					}}
 				/>
 
-				<AppHeader isAuthorized={!!accessToken} />
-
-				<main className="main">
-					<div className="wrapper">{children}</div>
-				</main>
-
-				<NewProductModal />
-
-				<AppFooter />
+				<Providers isAuthorized={!!accessToken}>{children}</Providers>
 			</body>
 		</html>
 	)
