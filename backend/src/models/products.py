@@ -1,6 +1,8 @@
 from uuid import UUID
+from datetime import datetime
+from typing import Annotated
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db import Base
@@ -17,6 +19,12 @@ class ProductModel(Base):
     ingredient: Mapped["IngredientModel"] = relationship(back_populates="product")
 
     quantity: Mapped[int]
+    
+    last_supply: Mapped[Annotated[
+    datetime,
+    mapped_column(
+        DateTime(timezone=True), nullable=False),
+    ]]
 
     def __repr__(self):
         return f"<Product id={self.ingredient_id} quantity={self.quantity}>"
