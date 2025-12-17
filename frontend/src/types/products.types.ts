@@ -1,12 +1,9 @@
+import type { UnitsEnum } from "./ingredients.types"
+
 export interface IProduct {
 	id: string
 	name: string
 	quantity: number
-	units: keyof typeof UnitsEnum
+	units: UnitsEnum
 	lastSupply: string
-}
-
-export const enum UnitsEnum {
-	PIECES = "PIECES",
-	KILOGRAMS = "KILOGRAMS"
 }

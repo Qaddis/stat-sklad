@@ -1,5 +1,5 @@
 import { ActionTypeEnum } from "@/types/actions.types"
-import { UnitsEnum } from "@/types/products.types"
+import { UnitsEnum } from "@/types/ingredients.types"
 
 export const getActionTypeLabel = (
 	type: keyof typeof ActionTypeEnum
