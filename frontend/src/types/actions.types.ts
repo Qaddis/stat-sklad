@@ -1,4 +1,4 @@
-import type { UnitsEnum } from "./products.types"
+import type { UnitsEnum } from "./ingredients.types"
 
 export interface IActionItem {
 	product_id: string
@@ -21,8 +21,7 @@ export const enum ActionTypeEnum {
 }
 
 export interface IActionFormData {
-	type: keyof typeof ActionTypeEnum
-	products: IActionItemFormData[]
+	suply_content: IActionItemFormData[]
 }
 
 export interface IActionItemFormData {

@@ -67,9 +67,9 @@ class AuthService {
 		const response = await axios.post<IAuthResponse>(
 			API_URL + EndpointsEnum.AUTH.REFRESH,
 			{
-				params: {
-					refresh_token: refreshToken
-				},
+				refresh_token: refreshToken
+			},
+			{
 				headers: getContentType()
 			}
 		)
