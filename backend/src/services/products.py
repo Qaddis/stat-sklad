@@ -5,11 +5,11 @@ from uuid import UUID as PyUUID
 import math
 
 from src.models.products import ProductModel
-from src.models.ingredients import IngredientModel
+from src.models.ingredients import IngredientModel, UnitsEnum
 
 
 
-def get_all_products(db: Session,sorted: bool = False, page: int = 1, products_per_page: int = 25) -> Dict[str, Any]:
+def get_all_products(db: Session, sorted: bool = False, page: int = 1, products_per_page: int = 25, q: str = None) -> Dict[str, Any]:
     query = db.query(ProductModel).join(IngredientModel)
     skip = (page - 1) * products_per_page # Элементы по номеру страницы
     
@@ -17,7 +17,14 @@ def get_all_products(db: Session,sorted: bool = False, page: int = 1, products_p
         query = query.order_by(asc(IngredientModel.name))
     else:   # Иначе выводим по дате создания \ добавления
         query = query.order_by(desc(ProductModel.created_at))
-    
+
+    if q:
+        query = query.filter(
+            or_(
+                ProductModel.name.ilike(f"%")
+            )
+        )
+
     total = query.count() # Всего элементов
     skip = (page - 1) * products_per_page
 
@@ -64,14 +71,15 @@ def get_product_by_id(db: Session, ingredient_id: str) -> Optional[Dict[str, Any
         ProductModel.ingredient_id == uuid_obj
     ).first()
     
+    Date = None
+
     if not product:
         return None
     
     return {
-        "ingredient_id": str(product.ingredient_id),
-        "ingredient_name": product.ingredient.name if product.ingredient else None,
-        "ingredient_description": product.ingredient.description if product.ingredient else None,
+        "id": str(product.ingredient_id),
+        "name": product.ingredient.name if product.ingredient else None,
         "quantity": product.quantity,
-        "created_at": product.created_at.isoformat() if product.created_at else None,
-        "ingredient_created_at": product.ingredient.created_at.isoformat() if product.ingredient and product.ingredient.created_at else None,
+        "units": str(UnitsEnum),
+        "last_supply": Date.isoformat()
     }
