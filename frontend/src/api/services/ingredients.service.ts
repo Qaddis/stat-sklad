@@ -1,5 +1,8 @@
 import type { IResponseResult } from "@/types/api.types"
-import type { IIngredientFormData } from "@/types/ingredients.types"
+import type {
+	IIngredient,
+	IIngredientFormData
+} from "@/types/ingredients.types"
 
 import { EndpointsEnum } from "@/constants/api.constants"
 import { apiErrorCatch } from "@/utils/api.utils"
@@ -16,6 +19,22 @@ class IngredientsService {
 			return {
 				status: response.status,
 				data: response.data
+			}
+		} catch (error) {
+			return apiErrorCatch(error)
+		}
+	}
+
+	async get(q: string): Promise<IResponseResult<IIngredient[]>> {
+		try {
+			const response = await instance.get<{ hint_content: IIngredient[] }>(
+				EndpointsEnum.INGREDIENTS.HINTS,
+				{ params: { q } }
+			)
+
+			return {
+				status: response.status,
+				data: response.data.hint_content
 			}
 		} catch (error) {
 			return apiErrorCatch(error)
