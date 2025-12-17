@@ -7,7 +7,7 @@ import ProductsQuantityPlot from "@/components/features/plots/ProductsQuantityPl
 import SuppliesCountPlot from "@/components/features/plots/SuppliesCountPlot"
 import PageHeading from "@/components/ui/PageHeading"
 import { NavigationEnum } from "@/constants/navigation.constants"
-import { UnitsEnum } from "@/types/products.types"
+import { UnitsEnum } from "@/types/ingredients.types"
 import { formatDate } from "@/utils/datetime.utils"
 import { getActionTypeLabel } from "@/utils/labels.utils"
 

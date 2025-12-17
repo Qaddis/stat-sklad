@@ -1,5 +1,5 @@
+import { UnitsEnum } from "@/types/ingredients.types"
 import type { IProduct } from "@/types/products.types"
-import { UnitsEnum } from "@/types/products.types"
 
 export const products: IProduct[] = [
 	{

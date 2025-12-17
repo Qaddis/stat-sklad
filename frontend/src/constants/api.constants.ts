@@ -16,7 +16,7 @@ export const EndpointsEnum = {
 	PRODUCTS: "/products",
 	ACTIONS: {
 		SUPPLY: "/actions/supply",
-		WRITE_OFF: "/actions/write_off",
+		WRITE_OFF: "/actions/write-off",
 		TAKEN: "/actions/taken"
 	},
 	HISTORY: {

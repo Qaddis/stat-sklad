@@ -1,6 +1,5 @@
 import axios from "axios"
 
-import { NavigationEnum } from "@/constants/navigation.constants"
 import { getContentType, getErrorMsg } from "@/utils/api.utils"
 import { getAccessToken, removeTokens } from "./auth.helper"
 import authService from "./services/auth.service"
@@ -40,8 +39,7 @@ instance.interceptors.response.use(
 				if (errorMsg.includes("token") || errorMsg.includes("unauthorized")) {
 					removeTokens()
 
-					if (typeof window !== "undefined")
-						window.location.href = NavigationEnum.LOGIN.SIGN_IN
+					location.reload()
 				}
 			}
 		}
