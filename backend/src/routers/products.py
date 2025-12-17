@@ -1,5 +1,6 @@
-from fastapi import APIRouter, HTTPException, status, Query, Depends
+from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.orm import Session
+from typing import Optional, List
 
 from src.services.products import get_all_products, get_product_by_id
 
@@ -7,19 +8,18 @@ from src.db.database import get_db
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
-@router.get("/")
+@router.get("/", response_model=List[dict])
 async def get_products(
-    page: int = Query(1, ge=1, description="Номер страницы"),
-    products_per_page: int = Query(25, ge=1, le=100, description="Записей на странице"),
-    sorted: bool = Query(False, description="Вкл\Выкл(True\False) сортировку по алфавиту"),
+    page: int = 1,
+    products_per_page: int = 25,
+    q: Optional[str] = None,
     db: Session = Depends(get_db) # Берем текущую сессию БД
 ) -> dict:
-    return get_all_products(db=db, sorted=sorted, page=page, products_per_page=products_per_page) # Вывод странички по номеру в адресе
+    return get_all_products(db=db, sorted=False, page=page, products_per_page=products_per_page, q=q) # Вывод странички по номеру в адресе
 
 @router.get("/{product_id}")
-async def get_product(product_id: int):
-    product = get_product_by_id(product_id)
-
+async def get_product(product_id: str, db: Session = Depends(get_db)):
+    product = get_product_by_id(db, product_id)
     if not product:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -29,16 +29,25 @@ async def get_product(product_id: int):
 
 @router.get("/alph")
 async def get_products_alph(
-    page: int = Query(1, ge=1, description="Номер страницы"),
-    products_per_page: int = Query(25, ge=1, le=100, description="Записей на странице"),
+    page: int = 1,
+    products_per_page: int = 25,
     db: Session = Depends(get_db) # Берем текущую сессию БД
 ):
-    return get_all_products(db=db, sorted=True, page=page, products_per_page=products_per_page)
+    return get_all_products(db=db, sorted=True, page=page, products_per_page=products_per_page, q=None)
+
+@router.get("/alphsearched")
+async def get_products_alphsearch(
+    page: int = 1,
+    products_per_page: int = 25,
+    q: Optional[str] = None,
+    db: Session = Depends(get_db) # Берем текущую сессию БД
+):
+    return get_all_products(db=db, sorted=True, page=page, products_per_page=products_per_page, q=q, sorted=True)
 
 @router.get("/latest")
 async def get_lates_productst(
-    page: int = Query(1, ge=1, description="Номер страницы"),
-    products_per_page: int = Query(25, ge=1, le=100, description="Записей на странице"),
+    page: int = 1,
+    products_per_page: int = 25,
     db: Session = Depends(get_db) # Берем текущую сессию БД
 ):
-    return get_all_products(db=db, sorted=False, page=page, products_per_page=products_per_page)
+    return get_all_products(db=db, sorted=False, page=page, products_per_page=products_per_page, q=None, sorted=0)

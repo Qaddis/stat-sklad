@@ -1,85 +1,117 @@
-from sqlalchemy.orm import Session
-from sqlalchemy import asc, desc
+from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import asc, desc, func
 from typing import Dict, Any, Optional
 from uuid import UUID as PyUUID
 import math
+from datetime import datetime
 
 from src.models.products import ProductModel
 from src.models.ingredients import IngredientModel, UnitsEnum
-
+from src.models.supplies import SupplyItemModel, SupplyModel
 
 
 def get_all_products(db: Session, sorted: bool = False, page: int = 1, products_per_page: int = 25, q: str = None) -> Dict[str, Any]:
-    query = db.query(ProductModel).join(IngredientModel)
-    skip = (page - 1) * products_per_page # Элементы по номеру страницы
-    
-    if sorted: # Сортируем по алфавиту, если пользователь нажал соответствующую кнопку
-        query = query.order_by(asc(IngredientModel.name))
-    else:   # Иначе выводим по дате создания \ добавления
-        query = query.order_by(desc(ProductModel.created_at))
+    query = db.query(ProductModel).options(
+        joinedload(ProductModel.ingredient)
+        .joinedload(IngredientModel.supply_items)
+        .joinedload(SupplyItemModel.supply)
+    ).join(IngredientModel)
 
-    if q:
-        query = query.filter(
-            or_(
-                ProductModel.name.ilike(f"%")
-            )
+    if q and q.strip():
+        query = query.filter(IngredientModel.name.ilike(f"%{q.strip()}%"))
+
+    if sorted:
+        query = query.order_by(asc(IngredientModel.name))
+    else:
+        subquery = db.query(
+            SupplyItemModel.product_id,
+            func.max(SupplyModel.created_at).label('last_supply_date')
+        ).join(
+            SupplyModel, SupplyItemModel.supply_id == SupplyModel.id
+        ).group_by(
+            SupplyItemModel.product_id
+        ).subquery()
+        
+        query = query.outerjoin(
+            subquery, 
+            IngredientModel.id == subquery.c.product_id
+        ).order_by(
+            desc(subquery.c.last_supply_date),  
+            desc(IngredientModel.created_at)  
         )
 
-    total = query.count() # Всего элементов
-    skip = (page - 1) * products_per_page
-
-    if skip >= total: # "Ошибка пользователя при запросе несуществующей страницы"
-        return {
-            "products": [], # "Список товаров закончился"
-            "total": total,
-            "page": page,
-            "per_page": products_per_page,
-            "total_pages": math.ceil(total / products_per_page) if products_per_page > 0 else 1,
-            "has_next": False,   # Далее не идем по страницам
-            "sorted": "alph" if sorted else "date"
-        }
+    total = query.count()
     
-    paginated = query.offset(skip).limit(products_per_page).all() # Ввыводим кол - во элементов постранично(пагинация же да)
-    productsLst = []
-    for product in paginated:
-        productsLst.append({
-            "ingredient_id": str(product.ingredient_id),
-            "ingredient_name": product.ingredient.name if product.ingredient else None,
-            "ingredient_description": product.ingredient.description if product.ingredient else None,
+    skip = (page - 1) * products_per_page
+    
+    if skip >= total:
+        return []
+    
+    products = query.offset(skip).limit(products_per_page).all()
+    
+    products_list = []
+    for product in products:
+        last_supply_date = None
+        if product.ingredient and product.ingredient.supply_items:
+            for supply_item in product.ingredient.supply_items:
+                if supply_item.supply and supply_item.supply.created_at:
+                    if last_supply_date is None or supply_item.supply.created_at > last_supply_date:
+                        last_supply_date = supply_item.supply.created_at
+
+        units_value = ""
+        if product.ingredient and product.ingredient.units:
+            if isinstance(product.ingredient.units, UnitsEnum):
+                units_value = product.ingredient.units.value
+            else:
+                units_value = str(product.ingredient.units)
+
+        product_data = {
+            "id": str(product.ingredient_id),
+            "name": product.ingredient.name if product.ingredient else "",
             "quantity": product.quantity,
-            "created_at": product.created_at.isoformat() if product.created_at else None,
-            "ingredient_created_at": product.ingredient.created_at.isoformat() if product.ingredient and product.ingredient.created_at else None,
-        })
+            "units": units_value,
+            "last_supply": last_supply_date.isoformat() if last_supply_date else None
+        }
+        products_list.append(product_data)
+    
+    return products_list
 
-    return {    # Вывод продуктов постранично, и данных о текущей странице, а так же расчет следующей
-         "products": productsLst,
-        "total": total,
-        "page": page,
-        "per_page": products_per_page,
-        "total_pages": math.ceil(total / products_per_page) if products_per_page > 0 else 1,
-        "has_next": (skip + products_per_page) < total,
-        "sorted": "alphabet" if sorted else "date"
-    }
 
-def get_product_by_id(db: Session, ingredient_id: str) -> Optional[Dict[str, Any]]:
+def get_product_by_id(db: Session, product_id: str) -> Optional[Dict[str, Any]]:
     try:
-        uuid_obj = PyUUID(ingredient_id)
+        uuid_obj = PyUUID(product_id)
     except ValueError:
         return None
     
-    product = db.query(ProductModel).join(IngredientModel).filter(
+    product = db.query(ProductModel).options(
+        joinedload(ProductModel.ingredient)
+        .joinedload(IngredientModel.supply_items)
+        .joinedload(SupplyItemModel.supply)
+    ).filter(
         ProductModel.ingredient_id == uuid_obj
     ).first()
     
-    Date = None
-
-    if not product:
+    if not product or not product.ingredient:
         return None
+    
+    last_supply_date = None
+    if product.ingredient.supply_items:
+        for supply_item in product.ingredient.supply_items:
+            if supply_item.supply and supply_item.supply.created_at:
+                if last_supply_date is None or supply_item.supply.created_at > last_supply_date:
+                    last_supply_date = supply_item.supply.created_at
+    
+    units_value = ""
+    if product.ingredient.units:
+        if isinstance(product.ingredient.units, UnitsEnum):
+            units_value = product.ingredient.units.value
+        else:
+            units_value = str(product.ingredient.units)
     
     return {
         "id": str(product.ingredient_id),
-        "name": product.ingredient.name if product.ingredient else None,
+        "name": product.ingredient.name,
         "quantity": product.quantity,
-        "units": str(UnitsEnum),
-        "last_supply": Date.isoformat()
+        "units": units_value,
+        "last_supply": last_supply_date.isoformat() if last_supply_date else None
     }
