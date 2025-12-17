@@ -4,6 +4,20 @@
 
 	display: flex;
 	flex-direction: column;
+
+	&-error {
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: salmon;
+		text-align: center;
+		margin-top: 3px;
+	}
+
+	&_field-error {
+		color: salmon;
+		text-wrap: wrap;
+		margin-top: 1.5px;
+	}
 }
 
 .product {
@@ -92,12 +106,6 @@
 	}
 }
 
-.error {
-	color: salmon;
-	text-wrap: wrap;
-	margin-top: 3.5px;
-}
-
 .add_product-btn {
 	width: 100%;
 	border: 2px dashed var(--add-color);
@@ -134,16 +142,17 @@
 .submit-btn {
 	width: 100%;
 	font-size: 1.1rem;
-	border: 2px solid var(--add-color);
+	border: 2px solid var(--primary-color);
+	color: var(--primary-color);
 	border-radius: 5px;
 	padding: 7.5px 25px;
 
-	transition-property:
-		background-color, translate, opacity, border-color, color;
-	transition-duration: 0.2s, 0.15s, 0.15s, 0.15s, 0.15s;
+	transition-property: background-color, color, translate, opacity;
+	transition-duration: 0.2s, 0.2s, 0.15s, 0.15s;
 
 	&:hover {
-		background-color: var(--add-color);
+		background-color: var(--primary-color);
+		color: var(--main-color);
 	}
 
 	&:active {

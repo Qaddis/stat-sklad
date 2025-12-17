@@ -1,6 +1,7 @@
 "use client"
 
 import { Add, Remove } from "@mui/icons-material"
+import { useState } from "react"
 import { type SubmitHandler, useFieldArray, useForm } from "react-hook-form"
 
 import ProductInput from "@/components/features/ProductInput"
@@ -8,6 +9,7 @@ import PageHeading from "@/components/ui/PageHeading"
 import { ActionTypeEnum, type IActionFormData } from "@/types/actions.types"
 import { getActionTypeLabel } from "@/utils/labels.utils"
 
+import productsService from "@/api/services/products.service"
 import styles from "./ProductsInteractionPage.module.scss"
 
 interface IProps {
@@ -15,6 +17,8 @@ interface IProps {
 }
 
 export default function ProductsInteractionPage({ actionType }: IProps) {
+	const [formError, setFormError] = useState<string | null>(null)
+
 	const {
 		register,
 		control,
@@ -23,18 +27,21 @@ export default function ProductsInteractionPage({ actionType }: IProps) {
 		formState: { errors }
 	} = useForm<IActionFormData>({
 		defaultValues: {
-			type: actionType,
-			products: [{ ingredient_id: "", quantity: 0 }]
+			suply_content: [{ ingredient_id: "", quantity: 0 }]
 		}
 	})
 
 	const { fields, append, remove } = useFieldArray({
 		control,
-		name: "products"
+		name: "suply_content"
 	})
 
-	const onSubmit: SubmitHandler<IActionFormData> = data => {
-		console.log(data)
+	const submitHandler: SubmitHandler<IActionFormData> = async data => {
+		setFormError(null)
+
+		const response = await productsService.action(actionType, data)
+
+		if (response.status !== 200) setFormError(response.error!)
 
 		reset()
 	}
@@ -43,7 +50,7 @@ export default function ProductsInteractionPage({ actionType }: IProps) {
 		<div className={styles.page}>
 			<PageHeading>{getActionTypeLabel(actionType)}</PageHeading>
 
-			<form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+			<form onSubmit={handleSubmit(submitHandler)} className={styles.form}>
 				{fields.map((field, idx) => (
 					<article key={field.id} className={styles.product}>
 						<div className={styles["inp-with-label"]}>
@@ -56,7 +63,7 @@ export default function ProductsInteractionPage({ actionType }: IProps) {
 
 							<ProductInput
 								control={control}
-								name={`products.${idx}.ingredient_id`}
+								name={`suply_content.${idx}.ingredient_id`}
 								rules={{
 									required: {
 										value: true,
@@ -68,11 +75,11 @@ export default function ProductsInteractionPage({ actionType }: IProps) {
 								type="text"
 							/>
 
-							{errors.products &&
-								errors.products[idx] &&
-								errors.products[idx].ingredient_id && (
-									<span className={styles.error}>
-										{errors.products[idx].ingredient_id.message}
+							{errors.suply_content &&
+								errors.suply_content[idx] &&
+								errors.suply_content[idx].ingredient_id && (
+									<span className={styles["form_field-error"]}>
+										{errors.suply_content[idx].ingredient_id.message}
 									</span>
 								)}
 						</div>
@@ -86,7 +93,7 @@ export default function ProductsInteractionPage({ actionType }: IProps) {
 							</label>
 
 							<input
-								{...register(`products.${idx}.quantity`, {
+								{...register(`suply_content.${idx}.quantity`, {
 									valueAsNumber: true,
 									required: {
 										value: true,
@@ -99,11 +106,11 @@ export default function ProductsInteractionPage({ actionType }: IProps) {
 								type="number"
 							/>
 
-							{errors.products &&
-								errors.products[idx] &&
-								errors.products[idx].quantity && (
-									<span className={styles.error}>
-										{errors.products[idx].quantity.message}
+							{errors.suply_content &&
+								errors.suply_content[idx] &&
+								errors.suply_content[idx].quantity && (
+									<span className={styles["form_field-error"]}>
+										{errors.suply_content[idx].quantity.message}
 									</span>
 								)}
 						</div>
@@ -136,6 +143,8 @@ export default function ProductsInteractionPage({ actionType }: IProps) {
 				<button className={styles["submit-btn"]} type="submit">
 					Сохранить
 				</button>
+
+				{formError && <span className={styles["form-error"]}>{formError}</span>}
 			</form>
 		</div>
 	)
