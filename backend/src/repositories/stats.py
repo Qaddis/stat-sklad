@@ -1,9 +1,16 @@
-from sqlalchemy import select
+from datetime import datetime, timezone
+
+from sqlalchemy import select, func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..models import ProductModel, IngredientModel, UnitsEnum
-from ..schemas import ProductsStatsPiece, ProductsStatsData
+from ..models import ProductModel, IngredientModel, UnitsEnum, SupplyModel, TypeEnum
+from ..schemas import (
+    ProductsStatsPiece,
+    ProductsStatsData,
+    SuppliesStatsPiece,
+    SuppliesStatsData,
+)
 
 
 class StatsCRUD:
@@ -44,5 +51,38 @@ class StatsCRUD:
 
         return ProductsStatsData(in_kilograms=kgs_data, in_pieces=pieces_data)
 
-    async def get_supplies_stats_data():
-        pass
+    async def get_supplies_stats_data(self):
+        current_year = datetime.now(timezone.utc).year
+
+        stmt = (
+            select(
+                func.extract("month", SupplyModel.created_at).label("month"),
+                func.count().label("supplies_count"),
+            )
+            .where(
+                SupplyModel.action_type == TypeEnum.SUPPLY,
+                func.extract("year", SupplyModel.created_at) == current_year,
+            )
+            .group_by(func.extract("month", SupplyModel.created_at))
+            .order_by(func.extract("month", SupplyModel.created_at))
+        )
+
+        result = await self.db.execute(stmt)
+        rows = result.all()
+
+        stats = [
+            SuppliesStatsPiece(month=item.month, supplies_count=item.supplies_count)
+            for item in rows
+        ]
+
+        full_stats = []
+        month_counts = {item.month: item.supplies_count for item in stats}
+
+        for month in range(1, 13):
+            full_stats.append(
+                SuppliesStatsPiece(
+                    month=month, supplies_count=month_counts.get(month, 0)
+                )
+            )
+
+        return SuppliesStatsData(content=full_stats)

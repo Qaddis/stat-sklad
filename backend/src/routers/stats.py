@@ -23,4 +23,6 @@ async def get_products_stats(
 async def get_supplies_stats(
     db: AsyncSession = Depends(get_db), user_id: str = Depends(check_token)
 ) -> SuppliesStatsData:
-    pass
+    crud = StatsCRUD(db)
+
+    return await crud.get_supplies_stats_data()
