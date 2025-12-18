@@ -1,4 +1,7 @@
 from datetime import datetime
+from uuid import UUID
+
+from fastapi import HTTPException, status
 
 from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload
@@ -72,9 +75,6 @@ class HistoryCRUD:
             size=size,
         )
 
-    async def get_one_operation(self, action_id: str):
-        pass
-
     async def get_latest_operations(self):
         stmt = (
             select(SupplyModel)
@@ -104,3 +104,38 @@ class HistoryCRUD:
             )
 
         return Operations(content=items)
+
+    async def get_one_operation(self, action_id: str):
+        try:
+            action_uuid = UUID(action_id)
+        except:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail="the passed id is not a uuid",
+            )
+
+        stmt = (
+            select(SupplyModel)
+            .where(SupplyModel.id == action_uuid)
+            .options(
+                selectinload(SupplyModel.products).selectinload(SupplyItemModel.product)
+            )
+        )
+
+        result = await self.db.execute(stmt)
+        operation = result.scalar_one_or_none()
+
+        if not operation:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="action with the passed id not found",
+            )
+
+        products = [item.product.name for item in operation.products if item.product]
+
+        return Operation(
+            id=operation.id,
+            type=operation.action_type,
+            products=products,
+            created_at=operation.created_at,
+        )
