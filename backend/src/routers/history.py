@@ -47,4 +47,4 @@ async def get_action_details(
 ) -> OperationExt:
     crud = HistoryCRUD(db)
 
-    return crud.get_one_operation(action_id)
+    return await crud.get_one_operation(action_id)

@@ -8,7 +8,13 @@ from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..models import SupplyModel, SupplyItemModel
-from ..schemas import Operation, PaginatedOperations, Operations, OperationItem
+from ..schemas import (
+    Operation,
+    PaginatedOperations,
+    Operations,
+    OperationItem,
+    OperationExt,
+)
 
 
 class HistoryCRUD:
@@ -142,7 +148,7 @@ class HistoryCRUD:
             if item.product
         ]
 
-        return Operation(
+        return OperationExt(
             id=str(operation.id),
             type=operation.action_type,
             products=products,
