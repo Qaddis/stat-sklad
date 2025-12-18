@@ -27,6 +27,10 @@ class NotificationCRUD:
         stmt = delete(NotificationModel).where(NotificationModel.product_id == product_id)
         await self.db.execute(stmt)
         
+    async def del_notification_id(self, notif_id: str):
+        stmt = delete(NotificationModel).where(NotificationModel.id == notif_id)
+        await self.db.execute(stmt)
+        
     async def edit_notification(self, description: str, product_id: str):
             stmt = update(NotificationModel).where(NotificationModel.product_id == product_id).values(description=description)
             await self.db.execute(stmt)
