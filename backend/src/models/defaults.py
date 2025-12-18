@@ -1,5 +1,5 @@
 from typing import Annotated
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 from uuid import UUID as PyUUID
 
 from sqlalchemy import text, DateTime
@@ -17,7 +17,7 @@ uuid = Annotated[
 createdAt = Annotated[
     datetime,
     mapped_column(
-        DateTime(timezone=True), server_default=text("TIMEZONE('utc', now())"), nullable=False
+        DateTime(timezone=True), default=datetime.now(timezone.utc), nullable=False
     ),
 ]
 
@@ -26,6 +26,6 @@ updatedAt = Annotated[
     mapped_column(
         DateTime(timezone=True),
         server_default=text("TIMEZONE('utc', now())"),
-        onupdate=datetime.now(UTC),
+        onupdate=datetime.now(timezone.utc),
     ),
 ]
