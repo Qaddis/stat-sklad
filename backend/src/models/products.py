@@ -7,8 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db import Base
 from src.models.defaults import uuid
-from src.models import IngredientModel
-
+from src.models.ingredients import IngredientModel
 
 class ProductModel(Base):
     __tablename__ = "products"
@@ -17,6 +16,8 @@ class ProductModel(Base):
         ForeignKey("ingredients.id", ondelete="CASCADE"), primary_key=True
     )
     ingredient: Mapped["IngredientModel"] = relationship(back_populates="product")
+       
+    notification: Mapped["NotificationModel"] = relationship(back_populates="product")
 
     quantity: Mapped[int]
     
