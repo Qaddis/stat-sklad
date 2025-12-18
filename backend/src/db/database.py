@@ -12,7 +12,7 @@ engine = create_async_engine(
     url=settings.DB_URL, echo=(False if settings.MODE == "PROD" else True)
 )
 
-session_factory = async_sessionmaker(engine, expire_on_commit=False)
+session_factory = async_sessionmaker(engine,class_=AsyncSession, expire_on_commit=False)
 
 async def get_db() -> AsyncSession:
 
