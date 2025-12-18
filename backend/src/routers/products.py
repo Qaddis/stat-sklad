@@ -16,8 +16,13 @@ async def get_products(
     q: str = "",
     db: AsyncSession = Depends(get_db),
     user_id: str = Depends(check_token),
-):
+) -> PaginatedProducts:
     crud = ProductsCRUD(db)
+
+    if size > 50:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="page size too large"
+        )
 
     products, total = await crud.get_products(page, size, q)
 
