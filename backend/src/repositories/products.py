@@ -1,48 +1,45 @@
-from ..models import ProductModel, IngredientModel, SupplyItemModel, SupplyModel
+from ..models import ProductModel, IngredientModel, SupplyItemModel, SupplyModel, UnitsEnum
 
 from typing import Optional, List, Dict, Any
 from fastapi import HTTPException, status
-from sqlalchemy import select, func
-from sqlalchemy.orm import selectinload
+from sqlalchemy import select, func, or_
+from sqlalchemy.orm import selectinload, joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 class ProductsCRUD:
     def __init__(self, db: AsyncSession):
         self.db = db
-    async def get_products(
+    
+    async def get_all_products(
         self,
-        *,
-        skip: int = 0,
-        limit: int = 100,
-        search: Optional[str] = None,
-        sort_by: str = "last_supply",
-        sort_desc: bool = True
+        page: int = 1,
+        size: int = 10,
+        q: Optional[str] = None,
+        sorted_by_alphabet: bool = False
     ) -> List[Dict[str, Any]]:
+        
         try:
+            skip = (page - 1) * size
+            
             stmt = (
                 select(ProductModel)
+                .join(IngredientModel, ProductModel.ingredient_id == IngredientModel.id)
                 .options(
                     selectinload(ProductModel.ingredient)
                     .selectinload(IngredientModel.supply_items)
                     .selectinload(SupplyItemModel.supply)
                 )
-                .join(IngredientModel)
             )
-            if search and search.strip():
+            
+            if q and q.strip():
+                search_term = f"%{q.strip()}%"
                 stmt = stmt.where(
-                    IngredientModel.name.ilike(f"%{search.strip()}%")
+                    IngredientModel.name.ilike(search_term)
                 )
-            if sort_by == "name":
-                order_column = IngredientModel.name
-                stmt = stmt.order_by(
-                    order_column.desc() if sort_desc else order_column.asc()
-                )
-            elif sort_by == "created_at":
-                order_column = ProductModel.created_at
-                stmt = stmt.order_by(
-                    order_column.desc() if sort_desc else order_column.asc()
-                )
-            elif sort_by == "last_supply":
+            
+            if sorted_by_alphabet:
+                stmt = stmt.order_by(IngredientModel.name.asc())
+            else:
                 subquery = (
                     select(
                         SupplyItemModel.product_id,
@@ -56,71 +53,47 @@ class ProductsCRUD:
                 stmt = stmt.outerjoin(
                     subquery, IngredientModel.id == subquery.c.product_id
                 ).order_by(
-                    subquery.c.last_supply_date.desc() if sort_desc 
-                    else subquery.c.last_supply_date.asc()
+                    func.coalesce(subquery.c.last_supply_date, ProductModel.created_at).desc(),
+                    IngredientModel.name.asc()  # Вторичная сортировка для стабильности
                 )
-            stmt = stmt.offset(skip).limit(limit)
+            
+            stmt = stmt.offset(skip).limit(size)
             
             result = await self.db.execute(stmt)
             products = result.scalars().all()
-            responses = []
+            
+            products_list = []
             for product in products:
                 if product.ingredient:
-                    last_supply_date = await self._get_last_supply_date(product.ingredient_id)
+                    if product.ingredient.supply_items:
+                        for supply_item in product.ingredient.supply_items:
+                            if supply_item.supply and supply_item.supply.created_at:
+                                if last_supply_date is None or supply_item.supply.created_at > last_supply_date:
+                                    last_supply_date = supply_item.supply.created_at
                     
-                    responses.append({
+                    units_value = ""
+                    if product.ingredient.units:
+                        if isinstance(product.ingredient.units, UnitsEnum):
+                            units_value = product.ingredient.units.value
+                        else:
+                            units_value = str(product.ingredient.units)
+                    
+
+                    product_data = {
                         "id": str(product.ingredient_id),
                         "name": product.ingredient.name,
                         "quantity": product.quantity,
-                        "units": product.ingredient.units.value if isinstance(product.ingredient.units, UnitsEnum) else str(product.ingredient.units),
+                        "units": units_value,
                         "last_supply": last_supply_date.isoformat() if last_supply_date else None
-                    })
+                    }
+                    products_list.append(product_data)
             
-            return responses
-            
-        except Exception as e:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Database error: {str(e)}"
-            )
-        
-
-    async def get_pgall_products(
-            self,
-            page: int = 1,
-            products_per_page: int = 25,
-            q: Optional[str] = None,
-            sorted: bool = False
-    ) -> Dict[str, Any]:
-        try:
-            skip = (page - 1) * products_per_page
-            products = await self.get_all_products(
-                skip=skip,
-                limit=products_per_page,
-                search=q,
-                sort_by="name" if sorted else "last_supply",
-                sort_desc=not sorted
-            )
-            
-            total = await self.count_products(q)
-            total_pages = (total + products_per_page - 1) // products_per_page if products_per_page > 0 else 1
-            
-            return {
-                "data": products,
-                "pagination": {
-                    "total": total,
-                    "page": page,
-                    "size": products_per_page,
-                    "total_pages": total_pages,
-                    "has_next": (skip + products_per_page) < total,
-                    "has_previous": page > 1
-                },
-                "search": q,
-                "sorted_by_alphabet": sorted
-            }
+            return products_list
             
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}"
             )
+    
+    
