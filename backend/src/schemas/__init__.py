@@ -9,3 +9,4 @@ from .notification import (
     NotificationAnswer_list,
 )
 from .products import Product, PaginatedProducts
+from .history import Operation, Operations, PaginatedOperations

@@ -3,3 +3,4 @@ from .actions import ActionsCRUD
 from .ingredients import IngredientsCRUD
 from .notification import NotificationCRUD
 from .products import ProductsCRUD
+from .history import HistoryCRUD

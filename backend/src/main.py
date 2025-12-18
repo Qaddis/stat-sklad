@@ -3,7 +3,15 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.config import settings
 
-from src.routers import products_router, auth_router, user_router, actions_router, ingredients_router, notifications_router
+from src.routers import (
+    products_router,
+    auth_router,
+    user_router,
+    actions_router,
+    ingredients_router,
+    notifications_router,
+    history_router,
+)
 
 
 app = FastAPI(
@@ -28,8 +36,4 @@ app.include_router(user_router)
 app.include_router(actions_router)
 app.include_router(ingredients_router)
 app.include_router(notifications_router)
-
-
-@app.get("/")
-async def root():
-    return {"message": "Hello world!"}
+app.include_router(history_router)
