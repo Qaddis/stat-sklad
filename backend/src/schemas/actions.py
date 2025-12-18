@@ -6,7 +6,7 @@ class ProductsInSupply(BaseModel):
     quantity: int
 
 class CreateSupply(BaseModel):
-    suply_content: List[ProductsInSupply]
+    supply_content: List[ProductsInSupply]
     
 class TakeIngridient(BaseModel):
     content: List[ProductsInSupply]

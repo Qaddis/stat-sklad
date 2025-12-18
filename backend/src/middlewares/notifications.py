@@ -13,7 +13,7 @@ async def off_product(supply: CreateSupply):
     
         not_crud = NotificationCRUD(db)
         supply = supply.model_dump()
-        supply = supply["suply_content"]
+        supply = supply["supply_content"]
         all_notifications = []
         for item in supply:
             existed_product = await not_crud.get_product(item["ingredient_id"])
@@ -49,7 +49,7 @@ async def add_product(supply: CreateSupply):
     
         not_crud = NotificationCRUD(db)
         supply = supply.model_dump()
-        supply = supply["suply_content"]
+        supply = supply["supply_content"]
         all_notifications = []
         for item in supply:
             existed_product = await not_crud.get_product(item["ingredient_id"])

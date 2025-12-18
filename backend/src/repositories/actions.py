@@ -26,7 +26,7 @@ class ActionsCRUD:
     async def create_supply(self, supply_content: CreateSupply, type_of_supply: str):
         # берем список продуктов в виде словаря
         supply_content = supply_content.model_dump()
-        supply_content = supply_content["suply_content"]
+        supply_content = supply_content["supply_content"]
         
         # создаем supplie и берем его id
         stmt = insert(SupplyModel).values(id=uuid.uuid4())
