@@ -1,5 +1,11 @@
 import type { UnitsEnum } from "./ingredients.types"
 
+export const enum ActionTypeEnum {
+	SUPPLY = "SUPPLY",
+	WRITE_OFF = "WRITE_OFF",
+	TAKEN = "TAKEN"
+}
+
 export interface IAction {
 	id: string
 	type: keyof typeof ActionTypeEnum
@@ -21,10 +27,11 @@ export interface IActionItem {
 	quantity: number
 }
 
-export const enum ActionTypeEnum {
-	SUPPLY = "SUPPLY",
-	WRITE_OFF = "WRITE_OFF",
-	TAKEN = "TAKEN"
+export interface IPaginatedActions {
+	items: IAction[]
+	total: number
+	page: number
+	size: number
 }
 
 export interface IActionFormData {

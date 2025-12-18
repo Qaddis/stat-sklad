@@ -1,19 +1,33 @@
 "use client"
 
-import { ArrowBackIosNew, ArrowForwardIos, Search } from "@mui/icons-material"
+import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material"
+import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
+import { useState } from "react"
 
+import historyService from "@/api/services/history.service"
+import Error from "@/components/ui/Error"
 import PageHeading from "@/components/ui/PageHeading"
+import Spinner from "@/components/ui/Spinner"
+
 import { NavigationEnum } from "@/constants/navigation.constants"
 import { formatDate } from "@/utils/datetime.utils"
 import { getActionTypeLabel } from "@/utils/labels.utils"
 
 import styles from "./ActionsHistoryPage.module.scss"
 
-// FIXME:
-import { actions } from "@/data"
-
 export default function ActionsHistoryPage() {
+	const [pageSize, setPageSize] = useState(25)
+	const [pageNum, setPageNum] = useState(1)
+	const [dateFrom, setDateFrom] = useState("")
+	const [dateTo, setDateTo] = useState("")
+
+	const { data, error, isLoading, isError, isSuccess } = useQuery({
+		queryKey: ["actionsHistory", pageSize, dateFrom, dateTo],
+		queryFn: () =>
+			historyService.getAll(pageNum - 1, pageSize, dateFrom, dateTo)
+	})
+
 	return (
 		<div className={styles.page}>
 			<PageHeading>История операций</PageHeading>
@@ -25,6 +39,8 @@ export default function ActionsHistoryPage() {
 						className={styles["search-block__date-inp"]}
 						type="date"
 						id="date-from-inp"
+						value={dateFrom}
+						onChange={e => setDateFrom(e.target.value)}
 					/>
 
 					<label htmlFor="date-to-inp">До:</label>
@@ -32,16 +48,15 @@ export default function ActionsHistoryPage() {
 						className={styles["search-block__date-inp"]}
 						type="date"
 						id="date-to-inp"
+						value={dateTo}
+						onChange={e => setDateTo(e.target.value)}
 					/>
-
-					<button className={styles["search-block__search-btn"]}>
-						<Search />
-					</button>
 				</div>
 
 				<select
-					defaultValue="25"
 					className={styles["search-block__pagination-size-select"]}
+					value={pageSize}
+					onChange={e => setPageSize(Number(e.target.value))}
 				>
 					<option value="10">10</option>
 					<option value="25">25</option>
@@ -49,46 +64,63 @@ export default function ActionsHistoryPage() {
 				</select>
 
 				<div className={styles["search-block__pagination-page-num"]}>
-					<button className={styles["search-block__page-num-btn"]}>
+					<button
+						onClick={() => setPageNum(prev => (prev > 1 ? prev - 1 : prev))}
+						disabled={pageNum <= 1}
+						className={styles["search-block__page-num-btn"]}
+					>
 						<ArrowBackIosNew />
 					</button>
 
 					<p className={styles["search-block__page-num"]}>
-						1 <span>/</span> 5
+						{isSuccess && data.items.length > 0 ? pageNum : 0} <span>/</span>{" "}
+						{isSuccess ? Math.ceil(data.total / data.size) : 0}
 					</p>
 
-					<button className={styles["search-block__page-num-btn"]}>
+					<button
+						onClick={() =>
+							setPageNum(prev =>
+								prev < (isSuccess ? Math.ceil(data.total / data.size) : pageNum)
+									? prev + 1
+									: prev
+							)
+						}
+						disabled={
+							pageNum >=
+							(isSuccess ? Math.ceil(data.total / data.size) : pageNum)
+						}
+						className={styles["search-block__page-num-btn"]}
+					>
 						<ArrowForwardIos />
 					</button>
 				</div>
 			</aside>
 
 			<section className={styles.content}>
-				<table className={styles["actions-table"]}>
-					<colgroup>
-						<col style={{ width: "15%" }} />
-						<col style={{ width: "50%" }} />
-						<col style={{ width: "20%" }} />
-						<col style={{ width: "15%" }} />
-					</colgroup>
+				{isLoading && <Spinner />}
 
-					<thead>
-						<tr className={styles["actions-table__headings"]}>
-							<th className={styles["actions-table__heading"]}>Операция</th>
-							<th className={styles["actions-table__heading"]}>Продукты</th>
-							<th className={styles["actions-table__heading"]}>Дата</th>
-							<th className={styles["actions-table__heading"]}>&nbsp;</th>
-						</tr>
-					</thead>
+				{isError && <Error message={error.message} />}
 
-					<tbody>
-						{actions
-							.sort(
-								(a, b) =>
-									new Date(b.created_at).getTime() -
-									new Date(a.created_at).getTime()
-							)
-							.map(action => (
+				{isSuccess && (
+					<table className={styles["actions-table"]}>
+						<colgroup>
+							<col style={{ width: "15%" }} />
+							<col style={{ width: "50%" }} />
+							<col style={{ width: "20%" }} />
+							<col style={{ width: "15%" }} />
+						</colgroup>
+
+						<thead>
+							<tr className={styles["actions-table__headings"]}>
+								<th className={styles["actions-table__heading"]}>Операция</th>
+								<th className={styles["actions-table__heading"]}>Продукты</th>
+								<th className={styles["actions-table__heading"]}>Дата</th>
+								<th className={styles["actions-table__heading"]}>&nbsp;</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{data.items.map(action => (
 								<tr
 									key={action.id}
 									className={styles["actions-table__data-row"]}
@@ -100,7 +132,7 @@ export default function ActionsHistoryPage() {
 										className={styles["actions-table__data-col"]}
 										dangerouslySetInnerHTML={{
 											__html: action.products.map(
-												product => `<i>${product.name}</i>`
+												product => `<i>${product}</i>`
 											)
 										}}
 									></td>
@@ -116,8 +148,9 @@ export default function ActionsHistoryPage() {
 									</td>
 								</tr>
 							))}
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				)}
 			</section>
 		</div>
 	)

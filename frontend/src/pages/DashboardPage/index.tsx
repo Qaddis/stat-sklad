@@ -60,7 +60,7 @@ export default function DashboardPage() {
 
 					<p className={styles["search-block__page-num"]}>
 						{isSuccess && data.items.length > 0 ? pageNum : 0} <span>/</span>{" "}
-						{isSuccess ? Math.ceil(data.total / data.size) : pageNum}
+						{isSuccess ? Math.ceil(data.total / data.size) : 0}
 					</p>
 
 					<button

@@ -108,7 +108,6 @@
 		}
 	}
 
-	&__search-btn,
 	&__page-num-btn {
 		width: 35px;
 		height: 35px;
@@ -122,13 +121,19 @@
 		transition-property: background-color, color, border-color;
 		transition-duration: 0.25s, 0.25s, 0.25s;
 
-		&:hover {
+		&:disabled {
+			background-color: var(--text-color);
+			color: var(--main-color);
+			opacity: 0.5;
+		}
+
+		&:not(:disabled):hover {
 			border-color: var(--primary-color);
 			background-color: var(--primary-color);
 			color: var(--main-color);
 		}
 
-		&:active {
+		&:not(:disabled):active {
 			background-color: var(--secondary-color);
 			border-color: var(--secondary-color);
 		}
