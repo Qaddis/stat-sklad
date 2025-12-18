@@ -17,7 +17,9 @@ uuid = Annotated[
 createdAt = Annotated[
     datetime,
     mapped_column(
-        DateTime(timezone=True), default=datetime.now(timezone.utc), nullable=False
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
     ),
 ]
 
@@ -25,7 +27,7 @@ updatedAt = Annotated[
     datetime,
     mapped_column(
         DateTime(timezone=True),
-        server_default=text("TIMEZONE('utc', now())"),
-        onupdate=datetime.now(timezone.utc),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
     ),
 ]
