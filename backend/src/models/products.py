@@ -17,6 +17,8 @@ class ProductModel(Base):
         ForeignKey("ingredients.id", ondelete="CASCADE"), primary_key=True
     )
     ingredient: Mapped["IngredientModel"] = relationship(back_populates="product")
+       
+    notification: Mapped["NotificationModel"] = relationship(back_populates="product")
 
     quantity: Mapped[int]
     

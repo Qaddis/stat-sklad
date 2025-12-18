@@ -1,14 +1,21 @@
 from typing import List
 from uuid import UUID
+from enum import Enum as PyEnum
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import ENUM as PgEnum
+
 
 from src.db import Base
 from src.models.defaults import uuid, createdAt
 from src.models import IngredientModel
 
-
+class TypeEnum(PyEnum):
+    SUPPLY = "SUPPLY"
+    WRITE_OFF = "WRITE_OFF"
+    TAKEN = "TAKEN"
+    
 class SupplyItemModel(Base):
     __tablename__ = "supply_items"
 
@@ -40,6 +47,13 @@ class SupplyModel(Base):
     )
 
     created_at: Mapped[createdAt]
+    
+    action_type: Mapped[TypeEnum] = mapped_column(
+        PgEnum(TypeEnum, name="type_enum", create_type=False),
+        nullable=False,
+        default=TypeEnum.SUPPLY,
+    )
+    
 
     def __repr__(self):
         return f"<Supply id={self.id} date={self.created_at}>"
