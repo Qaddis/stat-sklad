@@ -21,7 +21,7 @@ class NotificationCRUD:
         stmt = select(ProductModel).options(
             joinedload(ProductModel.ingredient)).where(ProductModel.ingredient_id == ingredient_id)
         result = await self.db.execute(stmt)
-        return result.scalar()
+        return result.scalar_one_or_none()
     
     async def del_notification(self, product_id: str):
         stmt = delete(NotificationModel).where(NotificationModel.product_id == product_id)
