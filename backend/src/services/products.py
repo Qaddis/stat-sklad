@@ -111,7 +111,7 @@ def get_product_by_id(db: Session, product_id: str) -> Optional[Dict[str, Any]]:
     return {
         "id": str(product.ingredient_id),
         "name": product.ingredient.name,
-        "quantity": product.quantity,
+        "quantity": int(product.quantity),
         "units": units_value,
         "last_supply": last_supply_date.isoformat() if last_supply_date else None
     }
