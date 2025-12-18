@@ -36,6 +36,20 @@ pip install -r requirements.txt
 
    - `DB_NAME=` - **строка**, название базы данных
 
+5. Перейти в `src/` и создать папку `certs/`
+
+6. В папке `src/certs/` сгенерировать приватный ключ `jwt-private.pem`:
+
+```bash
+openssl genpkey -algorithm RSA -out jwt-private.pem -pkeyopt rsa_keygen_bits:2048
+```
+
+7. В папке `src/certs/` извлечь публичный ключ `jwt-public.pem` из приватного ключа:
+
+```bash
+openssl rsa -in jwt-private.pem -pubout -out jwt-public.pem
+```
+
 ## 🚀 Запуск
 
 ### Режим разработки:
