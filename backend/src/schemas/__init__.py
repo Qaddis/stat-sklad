@@ -16,3 +16,9 @@ from .history import (
     OperationItem,
     OperationExt,
 )
+from .stats import (
+    ProductsStatsData,
+    ProductsStatsPiece,
+    SuppliesStatsData,
+    SuppliesStatsPiece,
+)

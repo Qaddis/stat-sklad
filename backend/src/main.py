@@ -11,6 +11,7 @@ from src.routers import (
     ingredients_router,
     notifications_router,
     history_router,
+    stats_router,
 )
 
 
@@ -37,3 +38,4 @@ app.include_router(actions_router)
 app.include_router(ingredients_router)
 app.include_router(notifications_router)
 app.include_router(history_router)
+app.include_router(stats_router)
