@@ -64,15 +64,17 @@
 	display: flex;
 	flex-direction: column;
 
-	input {
-		margin-bottom: 15px;
+	label {
+		margin: 15px 0 3.5px;
+
+		&:first-child {
+			margin-top: 0;
+		}
 	}
 
-	input,
 	select {
 		border: 1px solid var(--text-color);
 		border-radius: 5px;
-		margin-top: 3.5px;
 		padding: 5px;
 
 		transition: border-color 0.15s;
@@ -81,6 +83,21 @@
 			outline: none !important;
 			border-color: var(--secondary-color);
 		}
+	}
+}
+
+.form {
+	&_field-error {
+		margin-top: 1.5px;
+		color: salmon;
+	}
+
+	&-error {
+		font-size: 1.1rem;
+		color: salmon;
+		font-weight: 600;
+		text-align: center;
+		margin-top: 1.5px;
 	}
 }
 

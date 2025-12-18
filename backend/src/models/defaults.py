@@ -17,14 +17,14 @@ uuid = Annotated[
 createdAt = Annotated[
     datetime,
     mapped_column(
-        DateTime, server_default=text("TIMEZONE('utc', now())"), nullable=False
+        DateTime(timezone=True), server_default=text("TIMEZONE('utc', now())"), nullable=False
     ),
 ]
 
 updatedAt = Annotated[
     datetime,
     mapped_column(
-        DateTime,
+        DateTime(timezone=True),
         server_default=text("TIMEZONE('utc', now())"),
         onupdate=datetime.now(UTC),
     ),

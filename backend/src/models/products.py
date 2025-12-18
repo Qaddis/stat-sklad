@@ -1,6 +1,8 @@
 from uuid import UUID
+from datetime import datetime
+from typing import Annotated
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db import Base
@@ -17,6 +19,12 @@ class ProductModel(Base):
     ingredient: Mapped["IngredientModel"] = relationship(back_populates="product")
 
     quantity: Mapped[int]
+    
+    last_supply: Mapped[Annotated[
+    datetime,
+    mapped_column(
+        DateTime(timezone=True), nullable=False),
+    ]]
 
     created_at: Mapped[createdAt] # Добавляем дату создания для сортировки
     

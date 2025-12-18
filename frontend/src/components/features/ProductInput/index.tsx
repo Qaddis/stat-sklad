@@ -9,12 +9,10 @@ import {
 	type RegisterOptions
 } from "react-hook-form"
 
+import ingredientsService from "@/api/services/ingredients.service"
 import { newProductModalAtom } from "@/stores/newProductModal.store"
 
 import styles from "./ProductInput.module.scss"
-
-// FIXME:
-import { products } from "@/data"
 
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
 	name: string
@@ -43,22 +41,25 @@ export default function ProductInput({
 	const [isActive, setIsActive] = useState<boolean>(false)
 	const [hints, setHints] = useState<{ id: string; name: string }[]>([])
 	const [inputValue, setInputValue] = useState<string>("")
+	const [hintsError, setHintsError] = useState<string | null>(null)
 
 	const [_, setNewProductModalState] = useAtom(newProductModalAtom)
 
 	const displayValue =
 		inputValue ||
-		(hiddenValue ? (products.find(p => p.id === hiddenValue)?.name ?? "") : "")
+		(hiddenValue ? (hints.find(p => p.id === hiddenValue)?.name ?? "") : "")
 
-	// FIXME:
-	const updateHints = (value: string): void => {
-		setHints(
-			products
-				.filter(product =>
-					product.name.toLowerCase().includes(value.toLowerCase())
-				)
-				.map(product => ({ id: product.id, name: product.name }))
-		)
+	const updateHints = async (value: string): Promise<void> => {
+		setHintsError(null)
+
+		const response = await ingredientsService.get(value)
+
+		if (response.status === 200 && response.data) setHints(response.data)
+		else {
+			setHints([])
+
+			setHintsError(response.error!)
+		}
 	}
 
 	const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -66,9 +67,7 @@ export default function ProductInput({
 
 		updateHints(
 			inputValue ||
-				(hiddenValue
-					? (products.find(p => p.id === hiddenValue)?.name ?? "")
-					: "")
+				(hiddenValue ? (hints.find(p => p.id === hiddenValue)?.name ?? "") : "")
 		)
 
 		propOnFocus?.(e)
@@ -174,7 +173,7 @@ export default function ProductInput({
 									</button>
 								</li>
 							))
-						) : (
+						) : !hintsError ? (
 							<li>
 								<button
 									className={styles["no-hints-btn"]}
@@ -186,6 +185,10 @@ export default function ProductInput({
 								>
 									Добавить продукт
 								</button>
+							</li>
+						) : (
+							<li>
+								<h4 className={styles["hints-error"]}>Ошибка: {hintsError}</h4>
 							</li>
 						)}
 					</motion.ul>
