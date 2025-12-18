@@ -5,7 +5,7 @@ from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..models import SupplyModel, SupplyItemModel
-from ..schemas import Operation, PaginatedOperations
+from ..schemas import Operation, PaginatedOperations, Operations
 
 
 class HistoryCRUD:
@@ -76,4 +76,31 @@ class HistoryCRUD:
         pass
 
     async def get_latest_operations(self):
-        pass
+        stmt = (
+            select(SupplyModel)
+            .options(
+                selectinload(SupplyModel.products).selectinload(SupplyItemModel.product)
+            )
+            .order_by(SupplyModel.created_at.desc())
+            .limit(5)
+        )
+
+        result = await self.db.execute(stmt)
+        operations = result.scalars().all()
+
+        items = []
+        for operation in operations:
+            products = [
+                item.product.name for item in operation.products if item.product
+            ][:5]
+
+            items.append(
+                Operation(
+                    id=operation.id,
+                    type=operation.action_type,
+                    products=products,
+                    created_at=operation.created_at,
+                )
+            )
+
+        return Operations(content=items)

@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..middlewares import check_token
 from ..db import get_db
 from ..repositories import HistoryCRUD
-from ..schemas import PaginatedOperations
+from ..schemas import PaginatedOperations, Operations
 
 router = APIRouter(prefix="/actions/history", tags=["Actions", "History"])
 
@@ -33,8 +33,10 @@ async def get_history(
 async def get_latest(
     db: AsyncSession = Depends(get_db),
     user_id: str = Depends(check_token),
-):
-    pass
+) -> Operations:
+    crud = HistoryCRUD(db)
+
+    return await crud.get_latest_operations()
 
 
 @router.get("/{action_id}")
