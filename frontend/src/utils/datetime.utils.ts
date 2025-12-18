@@ -8,5 +8,10 @@ const options: Intl.DateTimeFormatOptions = {
 	hour12: false
 }
 
-export const formatDate = (utcDate: string): string =>
-	new Date(utcDate).toLocaleString("ru-RU", options)
+export const formatDate = (utcDate: string): string => {
+	const date = new Date(utcDate)
+
+	date.setHours(date.getHours() + 3)
+
+	return date.toLocaleString("ru-RU", options)
+}

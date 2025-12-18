@@ -1,11 +1,15 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
 
 import NotificationCard from "@/components/features/NotificationCard"
 import ProductsQuantityPlot from "@/components/features/plots/ProductsQuantityPlot"
 import SuppliesCountPlot from "@/components/features/plots/SuppliesCountPlot"
 import PageHeading from "@/components/ui/PageHeading"
+import Spinner from "@/components/ui/Spinner"
+
+import notificationsService from "@/api/services/notifications.service"
 import { NavigationEnum } from "@/constants/navigation.constants"
 import { UnitsEnum } from "@/types/ingredients.types"
 import { formatDate } from "@/utils/datetime.utils"
@@ -14,11 +18,24 @@ import { getActionTypeLabel } from "@/utils/labels.utils"
 import styles from "./HomePage.module.scss"
 
 // FIXME:
-import { actions, notifications, products, suppliesCount } from "@/data"
+import { actions, products, suppliesCount } from "@/data"
 
 export default function HomePage() {
 	const productsInKgs = products.filter(p => p.units === UnitsEnum.KILOGRAMS)
 	const productsInPieces = products.filter(p => p.units === UnitsEnum.PIECES)
+
+	const {
+		data: notifications,
+		error: notificationError,
+		isError: isNotificationError,
+		isLoading: isNotificationLoading,
+		isSuccess: isNotificationSuccess,
+		refetch: refetchNotifications
+	} = useQuery({
+		queryKey: ["notifications"],
+		queryFn: () => notificationsService.get()
+	})
+
 	return (
 		<div className={styles.page}>
 			<PageHeading>Главная</PageHeading>
@@ -26,11 +43,28 @@ export default function HomePage() {
 			<div className={styles["notifications-sect"]}>
 				<h3 className={styles["sect-heading"]}>Уведомления</h3>
 
-				<div className={styles.notifications}>
-					{notifications.map(n => (
-						<NotificationCard key={n.id} {...n} date={n.created_at} />
-					))}
-				</div>
+				{isNotificationLoading && <Spinner />}
+
+				{isNotificationError && (
+					<p className={styles.error}>
+						<span>Ошибка</span>: {notificationError.message}
+					</p>
+				)}
+
+				{isNotificationSuccess && notifications.length > 0 ? (
+					<div className={styles.notifications}>
+						{notifications.map(n => (
+							<NotificationCard
+								key={n.id}
+								{...n}
+								refetch={refetchNotifications}
+								date={n.created_at}
+							/>
+						))}
+					</div>
+				) : (
+					<h4 className={styles["no-content"]}>Пока что уведомлений нет</h4>
+				)}
 			</div>
 
 			<div className={styles["last-actions-sect"]}>

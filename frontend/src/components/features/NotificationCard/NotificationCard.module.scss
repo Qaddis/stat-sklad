@@ -33,3 +33,19 @@
 .description {
 	margin-top: 10px;
 }
+
+.delete-btn {
+	margin-left: auto;
+
+	transition:
+		color 0.2s,
+		opacity 0.15s;
+
+	&:hover {
+		color: salmon;
+	}
+
+	&:active {
+		opacity: 0.75;
+	}
+}
