@@ -30,7 +30,7 @@ export default function ActionsPage() {
 				/>
 				<ActionLink
 					to={NavigationEnum.ACTIONS.HISTORY.ALL}
-					title="История операций"
+					title="История действий"
 					icon={History}
 				/>
 			</nav>

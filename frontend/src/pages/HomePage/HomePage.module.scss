@@ -110,3 +110,22 @@
 		}
 	}
 }
+
+.no-content {
+	font-size: 1.25rem;
+	font-family: var(--martian-font);
+	text-align: center;
+	margin: 20px;
+	opacity: 0.65;
+}
+
+.error {
+	font-size: 1.1rem;
+	text-align: center;
+	margin: 20px 0;
+
+	span {
+		color: salmon;
+		font-weight: 600;
+	}
+}

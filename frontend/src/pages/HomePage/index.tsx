@@ -1,24 +1,71 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
 
 import NotificationCard from "@/components/features/NotificationCard"
 import ProductsQuantityPlot from "@/components/features/plots/ProductsQuantityPlot"
 import SuppliesCountPlot from "@/components/features/plots/SuppliesCountPlot"
 import PageHeading from "@/components/ui/PageHeading"
+import Spinner from "@/components/ui/Spinner"
+
+import historyService from "@/api/services/history.service"
+import notificationsService from "@/api/services/notifications.service"
+import statsService from "@/api/services/stats.service"
 import { NavigationEnum } from "@/constants/navigation.constants"
-import { UnitsEnum } from "@/types/ingredients.types"
 import { formatDate } from "@/utils/datetime.utils"
 import { getActionTypeLabel } from "@/utils/labels.utils"
 
 import styles from "./HomePage.module.scss"
 
 // FIXME:
-import { actions, notifications, products, suppliesCount } from "@/data"
 
 export default function HomePage() {
-	const productsInKgs = products.filter(p => p.units === UnitsEnum.KILOGRAMS)
-	const productsInPieces = products.filter(p => p.units === UnitsEnum.PIECES)
+	const {
+		data: notifications,
+		error: notificationError,
+		isError: isNotificationError,
+		isLoading: isNotificationLoading,
+		isSuccess: isNotificationSuccess,
+		refetch: refetchNotifications
+	} = useQuery({
+		queryKey: ["notifications"],
+		queryFn: () => notificationsService.get()
+	})
+
+	const {
+		data: lastSupplies,
+		error: lastSuppliesError,
+		isError: isLastSuppliesError,
+		isLoading: isLastSuppliesLoading,
+		isSuccess: isLastSuppliesSuccess
+	} = useQuery({
+		queryKey: ["lastSupplies"],
+		queryFn: () => historyService.getLatest()
+	})
+
+	const {
+		data: productsStats,
+		error: productsStatsError,
+		isError: isProductsStatsError,
+		isLoading: isProductsStatsLoading,
+		isSuccess: isProductsStatsSuccess
+	} = useQuery({
+		queryKey: ["productsStats"],
+		queryFn: () => statsService.getProductsStat()
+	})
+
+	const {
+		data: suppliesStats,
+		error: suppliesStatsError,
+		isError: isSuppliesStatsError,
+		isLoading: isSuppliesStatsLoading,
+		isSuccess: isSuppliesStatsSuccess
+	} = useQuery({
+		queryKey: ["suppliesStats"],
+		queryFn: () => statsService.getSuppliesStat()
+	})
+
 	return (
 		<div className={styles.page}>
 			<PageHeading>Главная</PageHeading>
@@ -26,41 +73,61 @@ export default function HomePage() {
 			<div className={styles["notifications-sect"]}>
 				<h3 className={styles["sect-heading"]}>Уведомления</h3>
 
-				<div className={styles.notifications}>
-					{notifications.map(n => (
-						<NotificationCard key={n.id} {...n} date={n.created_at} />
-					))}
-				</div>
+				{isNotificationLoading && <Spinner />}
+
+				{isNotificationError && (
+					<p className={styles.error}>
+						<span>Ошибка</span>: {notificationError.message}
+					</p>
+				)}
+
+				{isNotificationSuccess && notifications.length > 0 ? (
+					<div className={styles.notifications}>
+						{notifications.map(n => (
+							<NotificationCard
+								key={n.id}
+								{...n}
+								refetch={refetchNotifications}
+								date={n.created_at}
+							/>
+						))}
+					</div>
+				) : (
+					<h4 className={styles["no-content"]}>Пока что уведомлений нет</h4>
+				)}
 			</div>
 
 			<div className={styles["last-actions-sect"]}>
 				<h3 className={styles["sect-heading"]}>Последние действия</h3>
 
-				<table className={styles["actions-table"]}>
-					<colgroup>
-						<col style={{ width: "15%" }} />
-						<col style={{ width: "50%" }} />
-						<col style={{ width: "20%" }} />
-						<col style={{ width: "15%" }} />
-					</colgroup>
+				{isLastSuppliesLoading && <Spinner />}
 
-					<thead>
-						<tr className={styles["actions-table__headings"]}>
-							<th className={styles["actions-table__heading"]}>Операция</th>
-							<th className={styles["actions-table__heading"]}>Продукты</th>
-							<th className={styles["actions-table__heading"]}>Дата</th>
-							<th className={styles["actions-table__heading"]}>&nbsp;</th>
-						</tr>
-					</thead>
+				{isLastSuppliesError && (
+					<p className={styles.error}>
+						<span>Ошибка</span>: {lastSuppliesError.message}
+					</p>
+				)}
 
-					<tbody>
-						{actions
-							.sort(
-								(a, b) =>
-									new Date(b.created_at).getTime() -
-									new Date(a.created_at).getTime()
-							)
-							.map(action => (
+				{isLastSuppliesSuccess && lastSupplies.length > 0 ? (
+					<table className={styles["actions-table"]}>
+						<colgroup>
+							<col style={{ width: "15%" }} />
+							<col style={{ width: "50%" }} />
+							<col style={{ width: "20%" }} />
+							<col style={{ width: "15%" }} />
+						</colgroup>
+
+						<thead>
+							<tr className={styles["actions-table__headings"]}>
+								<th className={styles["actions-table__heading"]}>Операция</th>
+								<th className={styles["actions-table__heading"]}>Продукты</th>
+								<th className={styles["actions-table__heading"]}>Дата</th>
+								<th className={styles["actions-table__heading"]}>&nbsp;</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{lastSupplies.map(action => (
 								<tr
 									key={action.id}
 									className={styles["actions-table__data-row"]}
@@ -72,7 +139,7 @@ export default function HomePage() {
 										className={styles["actions-table__data-col"]}
 										dangerouslySetInnerHTML={{
 											__html: action.products.map(
-												product => `<i>${product.name}</i>`
+												product => `<i>${product}</i>`
 											)
 										}}
 									></td>
@@ -88,28 +155,67 @@ export default function HomePage() {
 									</td>
 								</tr>
 							))}
-						<tr>
-							<td colSpan={4} className={styles["actions-table__foot-col"]}>
-								<Link href={NavigationEnum.ACTIONS.HISTORY.ALL}>
-									Показать всю историю
-								</Link>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+							<tr>
+								<td colSpan={4} className={styles["actions-table__foot-col"]}>
+									<Link href={NavigationEnum.ACTIONS.HISTORY.ALL}>
+										Показать всю историю
+									</Link>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				) : (
+					<h4 className={styles["no-content"]}>
+						Пока что не было ни одного действия
+					</h4>
+				)}
 			</div>
 
 			<div className={styles.content}>
 				<h3 className={styles["sect-heading"]}>Статистика</h3>
 
-				<ProductsQuantityPlot
-					dataInKgs={productsInKgs.map(p => p.quantity)}
-					labelsInKgs={productsInKgs.map(p => p.name)}
-					dataInPieces={productsInPieces.map(p => p.quantity)}
-					labelsInPieces={productsInPieces.map(p => p.name)}
-				/>
+				{isProductsStatsLoading && <Spinner />}
 
-				<SuppliesCountPlot data={suppliesCount} />
+				{isProductsStatsError && (
+					<p className={styles.error}>
+						<span>Ошибка</span>: {productsStatsError.message}
+					</p>
+				)}
+
+				{isProductsStatsSuccess &&
+				(productsStats.in_kilograms.length > 0 ||
+					productsStats.in_pieces.length > 0) ? (
+					<ProductsQuantityPlot
+						dataInKgs={productsStats.in_kilograms.map(p => p.quantity)}
+						labelsInKgs={productsStats.in_kilograms.map(p => p.name)}
+						dataInPieces={productsStats.in_pieces.map(p => p.quantity)}
+						labelsInPieces={productsStats.in_pieces.map(p => p.name)}
+					/>
+				) : (
+					<h4 className={styles["no-content"]}>
+						Пока что продуктов на складе нет
+					</h4>
+				)}
+
+				{isSuppliesStatsLoading && <Spinner />}
+
+				{isSuppliesStatsError && (
+					<p className={styles.error}>
+						<span>Ошибка</span>: {suppliesStatsError.message}
+					</p>
+				)}
+
+				{isSuppliesStatsSuccess &&
+				suppliesStats.content.filter(item => item.supplies_count > 0).length >
+					0 ? (
+					<SuppliesCountPlot
+						data={suppliesStats.content.map(item => item.supplies_count)}
+					/>
+				) : (
+					<h4 className={styles["no-content"]}>
+						Пока что поставок в этом году не было
+					</h4>
+				)}
 			</div>
 		</div>
 	)

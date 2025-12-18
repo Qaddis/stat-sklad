@@ -31,5 +31,9 @@ export const EndpointsEnum = {
 	NOTIFICATIONS: {
 		GET: "/notifications",
 		DELETE: "/notifications/" // + notification_id
+	},
+	STATS: {
+		PRODUCTS: "/stats/products",
+		SUPPLIES: "/stats/supplies"
 	}
 } as const

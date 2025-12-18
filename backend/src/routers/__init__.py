@@ -4,3 +4,5 @@ from .user import router as user_router
 from .actions import router as actions_router
 from .ingredients import router as ingredients_router
 from .notification import router as notifications_router
+from .history import router as history_router
+from .stats import router as stats_router

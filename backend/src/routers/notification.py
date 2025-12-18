@@ -7,13 +7,21 @@ from ..middlewares import check_token
 
 router = APIRouter(prefix="/notifications", tags=["Notification"])
 
+
 @router.get("/")
-async def get_notifications(db: AsyncSession = Depends(get_db), user_id: str = Depends(check_token)):
+async def get_notifications(
+    db: AsyncSession = Depends(get_db), user_id: str = Depends(check_token)
+):
     crud = NotificationCRUD(db)
     notifs = await crud.get_all_notifications()
     return notifs
 
-@router.delete("{notification_id}")
-async def del_notification_by_id(notification_id: str, db: AsyncSession = Depends(get_db), user_id: str = Depends(check_token)):
+
+@router.delete("/{notification_id}")
+async def del_notification_by_id(
+    notification_id: str,
+    db: AsyncSession = Depends(get_db),
+    user_id: str = Depends(check_token),
+):
     crud = NotificationCRUD(db)
     await crud.del_notification_id(notification_id)

@@ -5,5 +5,12 @@ export interface IProduct {
 	name: string
 	quantity: number
 	units: UnitsEnum
-	lastSupply: string
+	last_supply: string
+}
+
+export interface IPaginateProducts {
+	items: IProduct[]
+	total: number
+	page: number
+	size: number
 }
