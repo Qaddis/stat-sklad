@@ -23,14 +23,14 @@ export default function ActionsHistoryPage() {
 	const [dateTo, setDateTo] = useState("")
 
 	const { data, error, isLoading, isError, isSuccess } = useQuery({
-		queryKey: ["actionsHistory", pageSize, dateFrom, dateTo],
+		queryKey: ["actionsHistory", pageNum, pageSize, dateFrom, dateTo],
 		queryFn: () =>
 			historyService.getAll(pageNum - 1, pageSize, dateFrom, dateTo)
 	})
 
 	return (
 		<div className={styles.page}>
-			<PageHeading>История операций</PageHeading>
+			<PageHeading>История действий</PageHeading>
 
 			<aside className={styles["search-block"]}>
 				<div className={styles["search-block__search-sect"]}>
@@ -56,7 +56,10 @@ export default function ActionsHistoryPage() {
 				<select
 					className={styles["search-block__pagination-size-select"]}
 					value={pageSize}
-					onChange={e => setPageSize(Number(e.target.value))}
+					onChange={e => {
+						setPageSize(Number(e.target.value))
+						setPageNum(1)
+					}}
 				>
 					<option value="10">10</option>
 					<option value="25">25</option>
@@ -101,7 +104,7 @@ export default function ActionsHistoryPage() {
 
 				{isError && <Error message={error.message} />}
 
-				{isSuccess && (
+				{isSuccess && data.items.length > 0 ? (
 					<table className={styles["actions-table"]}>
 						<colgroup>
 							<col style={{ width: "15%" }} />
@@ -150,6 +153,10 @@ export default function ActionsHistoryPage() {
 							))}
 						</tbody>
 					</table>
+				) : (
+					<h4 className={styles["no-content"]}>
+						Пока что не было ни одного действия
+					</h4>
 				)}
 			</section>
 		</div>

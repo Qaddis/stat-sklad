@@ -90,7 +90,7 @@ export default function HomePage() {
 					</p>
 				)}
 
-				{isLastSuppliesSuccess && (
+				{isLastSuppliesSuccess && lastSupplies.length > 0 ? (
 					<table className={styles["actions-table"]}>
 						<colgroup>
 							<col style={{ width: "15%" }} />
@@ -146,6 +146,10 @@ export default function HomePage() {
 							</tr>
 						</tbody>
 					</table>
+				) : (
+					<h4 className={styles["no-content"]}>
+						Пока что не было ни одного действия
+					</h4>
 				)}
 			</div>
 
