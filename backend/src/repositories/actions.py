@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, select, update
 from typing import Optional
 from fastapi import status, HTTPException
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 import uuid
 
 from ..schemas import CreateSupply
@@ -55,7 +55,7 @@ class ActionsCRUD:
                     existed_product.quantity + supply_item["quantity"]
                 )
                 if action_type == TypeEnum.SUPPLY:
-                    supply_item["last_supply"] = datetime.now(UTC)
+                    supply_item["last_supply"] = datetime.now(timezone.utc)
                     stmt = (
                         update(ProductModel)
                         .where(
@@ -76,7 +76,7 @@ class ActionsCRUD:
 
             # добавляем новый продукт
             else:
-                supply_item["last_supply"] = datetime.now(UTC)
+                supply_item["last_supply"] = datetime.now(timezone.utc)
                 stmt = insert(ProductModel).values(supply_item)
                 await self.db.execute(stmt)
 

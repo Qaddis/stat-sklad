@@ -8,3 +8,4 @@ from .notification import (
     NotificationAnswer,
     NotificationAnswer_list,
 )
+from .products import Product, PaginatedProducts
