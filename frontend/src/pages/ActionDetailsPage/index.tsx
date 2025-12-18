@@ -1,52 +1,71 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query"
+
+import Error from "@/components/ui/Error"
 import PageHeading from "@/components/ui/PageHeading"
-import { IAction } from "@/types/actions.types"
+import Spinner from "@/components/ui/Spinner"
+
+import historyService from "@/api/services/history.service"
 import { formatDate } from "@/utils/datetime.utils"
 import { getActionTypeLabel, getProductUnitsLabel } from "@/utils/labels.utils"
 
 import styles from "./ActionDetailsPage.module.scss"
 
-export default function ActionDetailsPage(props: IAction) {
-	return (
-		<div className={styles.page}>
-			<PageHeading>
-				Операция
-				<br />
-				{props.id}
-			</PageHeading>
+interface IProps {
+	actionId: string
+}
 
-			<section className={styles["action-info"]}>
-				<div className={styles.info}>
-					<article className={styles["info-field"]}>
-						<h4>Тип действия:</h4>
+export default function ActionDetailsPage({ actionId }: IProps) {
+	const { data, error, isLoading, isError, isSuccess } = useQuery({
+		queryKey: ["action", actionId],
+		queryFn: () => historyService.getById(actionId)
+	})
 
-						<span>{getActionTypeLabel(props.type)}</span>
-					</article>
+	if (isLoading) return <Spinner />
 
-					<article className={styles["info-field"]}>
-						<h4>Дата действия:</h4>
+	if (isError) return <Error message={error.message} />
 
-						<span>{formatDate(props.created_at)}</span>
-					</article>
-				</div>
+	if (isSuccess)
+		return (
+			<div className={styles.page}>
+				<PageHeading>
+					Операция
+					<br />
+					{actionId.split("-")[-1]}
+				</PageHeading>
 
-				<div className={styles.products}>
-					<h3>Список продуктов:</h3>
+				<section className={styles["action-info"]}>
+					<div className={styles.info}>
+						<article className={styles["info-field"]}>
+							<h4>Тип действия:</h4>
 
-					<ol className={styles["products-list"]}>
-						{props.products.map((product, idx) => (
-							<li className={styles.product} key={`product-${idx}`}>
-								<h4>{product.name}</h4>
+							<span>{getActionTypeLabel(data.type)}</span>
+						</article>
 
-								<span>
-									{product.quantity} {getProductUnitsLabel(product.units)}
-								</span>
-							</li>
-						))}
-					</ol>
-				</div>
-			</section>
-		</div>
-	)
+						<article className={styles["info-field"]}>
+							<h4>Дата действия:</h4>
+
+							<span>{formatDate(data.created_at)}</span>
+						</article>
+					</div>
+
+					<div className={styles.products}>
+						<h3>Список продуктов:</h3>
+
+						<ol className={styles["products-list"]}>
+							{data.products.map((product, idx) => (
+								<li className={styles.product} key={`product-${idx}`}>
+									<h4>{product.name}</h4>
+
+									<span>
+										{product.quantity} {getProductUnitsLabel(product.units)}
+									</span>
+								</li>
+							))}
+						</ol>
+					</div>
+				</section>
+			</div>
+		)
 }
