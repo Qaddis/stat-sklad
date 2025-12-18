@@ -8,7 +8,7 @@ from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..models import SupplyModel, SupplyItemModel
-from ..schemas import Operation, PaginatedOperations, Operations
+from ..schemas import Operation, PaginatedOperations, Operations, OperationItem
 
 
 class HistoryCRUD:
@@ -96,10 +96,10 @@ class HistoryCRUD:
 
             items.append(
                 Operation(
-                    id=operation.id,
+                    id=str(operation.id),
                     type=operation.action_type,
                     products=products,
-                    created_at=operation.created_at,
+                    created_at=operation.created_at.isoformat(),
                 )
             )
 
@@ -131,11 +131,20 @@ class HistoryCRUD:
                 detail="action with the passed id not found",
             )
 
-        products = [item.product.name for item in operation.products if item.product]
+        products = [
+            OperationItem(
+                id=str(item.product.id),
+                name=item.product.name,
+                quantity=item.quantity,
+                units=item.product.units,
+            )
+            for item in operation.products
+            if item.product
+        ]
 
         return Operation(
-            id=operation.id,
+            id=str(operation.id),
             type=operation.action_type,
             products=products,
-            created_at=operation.created_at,
+            created_at=operation.created_at.isoformat(),
         )

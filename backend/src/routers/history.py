@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..middlewares import check_token
 from ..db import get_db
 from ..repositories import HistoryCRUD
-from ..schemas import PaginatedOperations, Operations, Operation
+from ..schemas import PaginatedOperations, Operations, OperationExt
 
 router = APIRouter(prefix="/actions/history", tags=["Actions", "History"])
 
@@ -44,7 +44,7 @@ async def get_action_details(
     action_id: str,
     db: AsyncSession = Depends(get_db),
     user_id: str = Depends(check_token),
-) -> Operation:
+) -> OperationExt:
     crud = HistoryCRUD(db)
 
     return crud.get_one_operation(action_id)
