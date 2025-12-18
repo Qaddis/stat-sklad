@@ -21,7 +21,7 @@ export const enum ActionTypeEnum {
 }
 
 export interface IActionFormData {
-	suply_content: IActionItemFormData[]
+	supply_content: IActionItemFormData[]
 }
 
 export interface IActionItemFormData {

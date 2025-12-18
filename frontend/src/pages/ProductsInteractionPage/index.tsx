@@ -27,17 +27,19 @@ export default function ProductsInteractionPage({ actionType }: IProps) {
 		formState: { errors }
 	} = useForm<IActionFormData>({
 		defaultValues: {
-			suply_content: [{ ingredient_id: "", quantity: 0 }]
+			supply_content: [{ ingredient_id: "", quantity: 0 }]
 		}
 	})
 
 	const { fields, append, remove } = useFieldArray({
 		control,
-		name: "suply_content"
+		name: "supply_content"
 	})
 
 	const submitHandler: SubmitHandler<IActionFormData> = async data => {
 		setFormError(null)
+
+		console.log(actionType)
 
 		const response = await productsService.action(actionType, data)
 
@@ -63,7 +65,7 @@ export default function ProductsInteractionPage({ actionType }: IProps) {
 
 							<ProductInput
 								control={control}
-								name={`suply_content.${idx}.ingredient_id`}
+								name={`supply_content.${idx}.ingredient_id`}
 								rules={{
 									required: {
 										value: true,
@@ -75,11 +77,11 @@ export default function ProductsInteractionPage({ actionType }: IProps) {
 								type="text"
 							/>
 
-							{errors.suply_content &&
-								errors.suply_content[idx] &&
-								errors.suply_content[idx].ingredient_id && (
+							{errors.supply_content &&
+								errors.supply_content[idx] &&
+								errors.supply_content[idx].ingredient_id && (
 									<span className={styles["form_field-error"]}>
-										{errors.suply_content[idx].ingredient_id.message}
+										{errors.supply_content[idx].ingredient_id.message}
 									</span>
 								)}
 						</div>
@@ -93,7 +95,7 @@ export default function ProductsInteractionPage({ actionType }: IProps) {
 							</label>
 
 							<input
-								{...register(`suply_content.${idx}.quantity`, {
+								{...register(`supply_content.${idx}.quantity`, {
 									valueAsNumber: true,
 									required: {
 										value: true,
@@ -106,11 +108,11 @@ export default function ProductsInteractionPage({ actionType }: IProps) {
 								type="number"
 							/>
 
-							{errors.suply_content &&
-								errors.suply_content[idx] &&
-								errors.suply_content[idx].quantity && (
+							{errors.supply_content &&
+								errors.supply_content[idx] &&
+								errors.supply_content[idx].quantity && (
 									<span className={styles["form_field-error"]}>
-										{errors.suply_content[idx].quantity.message}
+										{errors.supply_content[idx].quantity.message}
 									</span>
 								)}
 						</div>
