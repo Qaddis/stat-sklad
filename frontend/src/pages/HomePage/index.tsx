@@ -11,20 +11,17 @@ import Spinner from "@/components/ui/Spinner"
 
 import historyService from "@/api/services/history.service"
 import notificationsService from "@/api/services/notifications.service"
+import statsService from "@/api/services/stats.service"
 import { NavigationEnum } from "@/constants/navigation.constants"
-import { UnitsEnum } from "@/types/ingredients.types"
 import { formatDate } from "@/utils/datetime.utils"
 import { getActionTypeLabel } from "@/utils/labels.utils"
 
 import styles from "./HomePage.module.scss"
 
 // FIXME:
-import { products, suppliesCount } from "@/data"
+import { suppliesCount } from "@/data"
 
 export default function HomePage() {
-	const productsInKgs = products.filter(p => p.units === UnitsEnum.KILOGRAMS)
-	const productsInPieces = products.filter(p => p.units === UnitsEnum.PIECES)
-
 	const {
 		data: notifications,
 		error: notificationError,
@@ -46,6 +43,17 @@ export default function HomePage() {
 	} = useQuery({
 		queryKey: ["lastSupplies"],
 		queryFn: () => historyService.getLatest()
+	})
+
+	const {
+		data: productsStats,
+		error: productsStatsError,
+		isError: isProductsStatsError,
+		isLoading: isProductsStatsLoading,
+		isSuccess: isProductsStatsSuccess
+	} = useQuery({
+		queryKey: ["productsStats"],
+		queryFn: () => statsService.getProductsStat()
 	})
 
 	return (
@@ -156,12 +164,28 @@ export default function HomePage() {
 			<div className={styles.content}>
 				<h3 className={styles["sect-heading"]}>Статистика</h3>
 
-				<ProductsQuantityPlot
-					dataInKgs={productsInKgs.map(p => p.quantity)}
-					labelsInKgs={productsInKgs.map(p => p.name)}
-					dataInPieces={productsInPieces.map(p => p.quantity)}
-					labelsInPieces={productsInPieces.map(p => p.name)}
-				/>
+				{isProductsStatsLoading && <Spinner />}
+
+				{isProductsStatsError && (
+					<p className={styles.error}>
+						<span>Ошибка</span>: {productsStatsError.message}
+					</p>
+				)}
+
+				{isProductsStatsSuccess &&
+				(productsStats.in_kilograms.length > 0 ||
+					productsStats.in_pieces.length > 0) ? (
+					<ProductsQuantityPlot
+						dataInKgs={productsStats.in_kilograms.map(p => p.quantity)}
+						labelsInKgs={productsStats.in_kilograms.map(p => p.name)}
+						dataInPieces={productsStats.in_pieces.map(p => p.quantity)}
+						labelsInPieces={productsStats.in_pieces.map(p => p.name)}
+					/>
+				) : (
+					<h4 className={styles["no-content"]}>
+						Пока что продуктов на складе нет
+					</h4>
+				)}
 
 				<SuppliesCountPlot data={suppliesCount} />
 			</div>
