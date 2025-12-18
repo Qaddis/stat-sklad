@@ -1,4 +1,4 @@
-from ..schemas import Notification, Notification_list
+from ..schemas import Notification, Notification_list, NotificationAnswer, NotificationAnswer_list
 from ..models import NotificationModel, ProductModel
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -35,3 +35,19 @@ class NotificationCRUD:
         stmt = select(NotificationModel).where(NotificationModel.product_id == product_id)
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
+    
+    async def get_all_notifications(self):
+        stmt = select(NotificationModel)
+        result = await self.db.execute(stmt)
+        notifs = result.all()
+        all_notifications = []
+        for item in notifs:
+            item = item._asdict()
+            item = item["NotificationModel"]
+            answer = NotificationAnswer(id=item.id,
+            title=item.title,
+  	        description=item.description,
+  	        created_at=item.created_at)
+            all_notifications.append(answer)
+        all_notifications = NotificationAnswer_list(content=all_notifications)
+        return all_notifications
