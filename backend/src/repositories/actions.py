@@ -23,24 +23,23 @@ class ActionsCRUD:
                 status_code=status.HTTP_400_BAD_REQUEST, detail="unexisted ingredient"
             )
 
-    async def create_supply(self, supply_content: CreateSupply):
+    async def create_supply(self, supply_content: CreateSupply, action_type: TypeEnum):
         # берем список продуктов в виде словаря
         supply_content = supply_content.model_dump()
-        type_of_supply = supply_content["action_type"]
         supply_content = supply_content["supply_content"]
 
         # создаем supplie и берем его id
-        stmt = insert(SupplyModel).values(id=uuid.uuid4())
+        stmt = insert(SupplyModel).values(id=uuid.uuid4(), action_type=action_type)
         compiled = stmt.compile()
         await self.db.execute(stmt)
         supply_id = compiled.params["id"]
 
         # перебираем список продуктов и сохранияем кол-во продуктов в отдельную переменную
         for supply_item in supply_content:
-            if type_of_supply == TypeEnum.WRITE_OFF:
+            if action_type == TypeEnum.WRITE_OFF:
                 supply_item["quantity"] = -supply_item["quantity"]
             existed_product = await self.get_product(supply_item["ingredient_id"])
-            if type_of_supply == TypeEnum.WRITE_OFF and (
+            if action_type == TypeEnum.WRITE_OFF and (
                 existed_product is None
                 or existed_product.quantity < abs(supply_item["quantity"])
             ):
@@ -55,7 +54,7 @@ class ActionsCRUD:
                 supply_item["quantity"] = (
                     existed_product.quantity + supply_item["quantity"]
                 )
-                if type_of_supply == TypeEnum.SUPPLY:
+                if action_type == TypeEnum.SUPPLY:
                     supply_item["last_supply"] = datetime.now(UTC)
                     stmt = (
                         update(ProductModel)
