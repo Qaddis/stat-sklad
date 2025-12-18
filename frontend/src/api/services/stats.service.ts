@@ -1,4 +1,7 @@
-import type { IProductsStatsData } from "@/types/stats.types"
+import type {
+	IProductsStatsData,
+	ISuppliesStatsData
+} from "@/types/stats.types"
 
 import { EndpointsEnum } from "@/constants/api.constants"
 import instance from "../api.interceptor"
@@ -12,7 +15,13 @@ class StatsService {
 		return response.data
 	}
 
-	async getSuppliesStat() {}
+	async getSuppliesStat(): Promise<ISuppliesStatsData> {
+		const response = await instance.get<ISuppliesStatsData>(
+			EndpointsEnum.STATS.SUPPLIES
+		)
+
+		return response.data
+	}
 }
 
 const statsService = new StatsService()

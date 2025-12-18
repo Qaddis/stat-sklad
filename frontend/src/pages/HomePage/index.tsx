@@ -19,7 +19,6 @@ import { getActionTypeLabel } from "@/utils/labels.utils"
 import styles from "./HomePage.module.scss"
 
 // FIXME:
-import { suppliesCount } from "@/data"
 
 export default function HomePage() {
 	const {
@@ -54,6 +53,17 @@ export default function HomePage() {
 	} = useQuery({
 		queryKey: ["productsStats"],
 		queryFn: () => statsService.getProductsStat()
+	})
+
+	const {
+		data: suppliesStats,
+		error: suppliesStatsError,
+		isError: isSuppliesStatsError,
+		isLoading: isSuppliesStatsLoading,
+		isSuccess: isSuppliesStatsSuccess
+	} = useQuery({
+		queryKey: ["suppliesStats"],
+		queryFn: () => statsService.getSuppliesStat()
 	})
 
 	return (
@@ -187,7 +197,25 @@ export default function HomePage() {
 					</h4>
 				)}
 
-				<SuppliesCountPlot data={suppliesCount} />
+				{isSuppliesStatsLoading && <Spinner />}
+
+				{isSuppliesStatsError && (
+					<p className={styles.error}>
+						<span>Ошибка</span>: {suppliesStatsError.message}
+					</p>
+				)}
+
+				{isSuppliesStatsSuccess &&
+				suppliesStats.content.filter(item => item.supplies_count > 0).length >
+					0 ? (
+					<SuppliesCountPlot
+						data={suppliesStats.content.map(item => item.supplies_count)}
+					/>
+				) : (
+					<h4 className={styles["no-content"]}>
+						Пока что поставок в этом году не было
+					</h4>
+				)}
 			</div>
 		</div>
 	)
