@@ -54,7 +54,7 @@ def get_all_products(db: Session,sorted: bool = False, page: int = 1, products_p
         "sorted": "alphabet" if sorted else "date"
     }
 
-def get_product_by_id(db: Session, ingredient_id: str) -> Optional[Dict[str, Any]]:
+def get_product(db: Session, ingredient_id: str) -> Optional[Dict[str, Any]]:
     try:
         uuid_obj = PyUUID(ingredient_id)
     except ValueError:
@@ -63,15 +63,15 @@ def get_product_by_id(db: Session, ingredient_id: str) -> Optional[Dict[str, Any
     product = db.query(ProductModel).join(IngredientModel).filter(
         ProductModel.ingredient_id == uuid_obj
     ).first()
+    date = None
     
     if not product:
         return None
     
     return {
-        "ingredient_id": str(product.ingredient_id),
-        "ingredient_name": product.ingredient.name if product.ingredient else None,
-        "ingredient_description": product.ingredient.description if product.ingredient else None,
+        "id": str(product.ingredient_id),
+        "name": product.ingredient.name if product.ingredient else None,
         "quantity": product.quantity,
-        "created_at": product.created_at.isoformat() if product.created_at else None,
-        "ingredient_created_at": product.ingredient.created_at.isoformat() if product.ingredient and product.ingredient.created_at else None,
+        "units": str(product.ingridient.units),
+        "last_supply": str(date.isoformat())
     }
