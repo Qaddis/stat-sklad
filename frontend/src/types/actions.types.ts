@@ -1,17 +1,24 @@
 import type { UnitsEnum } from "./ingredients.types"
 
+export interface IAction {
+	id: string
+	type: keyof typeof ActionTypeEnum
+	products: string[]
+	created_at: string
+}
+
+export interface IActionExt {
+	id: string
+	type: keyof typeof ActionTypeEnum
+	products: IActionItem[]
+	created_at: string
+}
+
 export interface IActionItem {
 	product_id: string
 	name: string
 	units: keyof typeof UnitsEnum
 	quantity: number
-}
-
-export interface IAction {
-	id: string
-	type: keyof typeof ActionTypeEnum
-	products: IActionItem[]
-	created_at: string
 }
 
 export const enum ActionTypeEnum {

@@ -9,6 +9,7 @@ import SuppliesCountPlot from "@/components/features/plots/SuppliesCountPlot"
 import PageHeading from "@/components/ui/PageHeading"
 import Spinner from "@/components/ui/Spinner"
 
+import historyService from "@/api/services/history.service"
 import notificationsService from "@/api/services/notifications.service"
 import { NavigationEnum } from "@/constants/navigation.constants"
 import { UnitsEnum } from "@/types/ingredients.types"
@@ -18,7 +19,7 @@ import { getActionTypeLabel } from "@/utils/labels.utils"
 import styles from "./HomePage.module.scss"
 
 // FIXME:
-import { actions, products, suppliesCount } from "@/data"
+import { products, suppliesCount } from "@/data"
 
 export default function HomePage() {
 	const productsInKgs = products.filter(p => p.units === UnitsEnum.KILOGRAMS)
@@ -34,6 +35,17 @@ export default function HomePage() {
 	} = useQuery({
 		queryKey: ["notifications"],
 		queryFn: () => notificationsService.get()
+	})
+
+	const {
+		data: lastSupplies,
+		error: lastSuppliesError,
+		isError: isLastSuppliesError,
+		isLoading: isLastSuppliesLoading,
+		isSuccess: isLastSuppliesSuccess
+	} = useQuery({
+		queryKey: ["lastSupplies"],
+		queryFn: () => historyService.getLatest()
 	})
 
 	return (
@@ -70,31 +82,34 @@ export default function HomePage() {
 			<div className={styles["last-actions-sect"]}>
 				<h3 className={styles["sect-heading"]}>Последние действия</h3>
 
-				<table className={styles["actions-table"]}>
-					<colgroup>
-						<col style={{ width: "15%" }} />
-						<col style={{ width: "50%" }} />
-						<col style={{ width: "20%" }} />
-						<col style={{ width: "15%" }} />
-					</colgroup>
+				{isLastSuppliesLoading && <Spinner />}
 
-					<thead>
-						<tr className={styles["actions-table__headings"]}>
-							<th className={styles["actions-table__heading"]}>Операция</th>
-							<th className={styles["actions-table__heading"]}>Продукты</th>
-							<th className={styles["actions-table__heading"]}>Дата</th>
-							<th className={styles["actions-table__heading"]}>&nbsp;</th>
-						</tr>
-					</thead>
+				{isLastSuppliesError && (
+					<p className={styles.error}>
+						<span>Ошибка</span>: {lastSuppliesError.message}
+					</p>
+				)}
 
-					<tbody>
-						{actions
-							.sort(
-								(a, b) =>
-									new Date(b.created_at).getTime() -
-									new Date(a.created_at).getTime()
-							)
-							.map(action => (
+				{isLastSuppliesSuccess && (
+					<table className={styles["actions-table"]}>
+						<colgroup>
+							<col style={{ width: "15%" }} />
+							<col style={{ width: "50%" }} />
+							<col style={{ width: "20%" }} />
+							<col style={{ width: "15%" }} />
+						</colgroup>
+
+						<thead>
+							<tr className={styles["actions-table__headings"]}>
+								<th className={styles["actions-table__heading"]}>Операция</th>
+								<th className={styles["actions-table__heading"]}>Продукты</th>
+								<th className={styles["actions-table__heading"]}>Дата</th>
+								<th className={styles["actions-table__heading"]}>&nbsp;</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{lastSupplies.map(action => (
 								<tr
 									key={action.id}
 									className={styles["actions-table__data-row"]}
@@ -106,7 +121,7 @@ export default function HomePage() {
 										className={styles["actions-table__data-col"]}
 										dangerouslySetInnerHTML={{
 											__html: action.products.map(
-												product => `<i>${product.name}</i>`
+												product => `<i>${product}</i>`
 											)
 										}}
 									></td>
@@ -122,15 +137,16 @@ export default function HomePage() {
 									</td>
 								</tr>
 							))}
-						<tr>
-							<td colSpan={4} className={styles["actions-table__foot-col"]}>
-								<Link href={NavigationEnum.ACTIONS.HISTORY.ALL}>
-									Показать всю историю
-								</Link>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+							<tr>
+								<td colSpan={4} className={styles["actions-table__foot-col"]}>
+									<Link href={NavigationEnum.ACTIONS.HISTORY.ALL}>
+										Показать всю историю
+									</Link>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				)}
 			</div>
 
 			<div className={styles.content}>
